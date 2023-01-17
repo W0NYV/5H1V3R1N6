@@ -9,7 +9,7 @@ namespace W0NYV.Shivering.CubeCS
     {
 
         private int _threadSize = 3;
-        private int _maxObjectNum = 9;
+        [SerializeField] private int _maxObjectNum = 9;
         public int MaxObjectNum
         {
             get => _maxObjectNum;
