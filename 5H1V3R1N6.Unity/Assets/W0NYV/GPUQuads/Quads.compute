@@ -1,0 +1,56 @@
+#pragma kernel BoxCS
+
+#define THREAD_SIZE 4
+
+struct QuadData
+{
+    float3 position;
+    float3 rotation;
+    float3 scale;
+};
+
+RWStructuredBuffer<QuadData> _QuadDataBufferWrite;
+
+int _QuadCount;
+
+[numthreads(THREAD_SIZE, 1, 1)]
+void BoxCS(uint3 DTid : SV_DispatchThreadID, uint3 Gid : SV_GroupID, uint3 GTid : SV_GroupThreadID, uint GI : SV_GroupIndex)
+{
+    const unsigned int GT_ID = GTid.x; //グループ内のスレッドID
+    const unsigned int G_ID = Gid.x;
+    const unsigned int DT_ID = DTid.x; //ぜんたいからみたID
+
+    float3 pos = (float3)0;
+    float3 rot = (float3)0;
+
+    float test = 10.0;
+
+    if(GT_ID == 0)
+    {
+        pos = float3(0.5 + 0.5*G_ID*test, 0, 0);
+        rot = float3(0, 270, 0);
+    }
+    else if(GT_ID == 1)
+    {
+        pos = float3(-0.5 + -0.5*G_ID*test,  0, 0);
+        rot = float3(0, 90, 0);
+
+    }
+    else if(GT_ID == 2)
+    {
+        pos = float3(0, 0, 0.5 + 0.5*G_ID*test);
+        rot = float3(0, 180, 0);
+    }
+    else if(GT_ID == 3)
+    {
+        pos = float3(0, 0, -0.5 + -0.5*G_ID*test);
+        rot = float3(0, 0, 0);
+    }
+
+    float3 scl = (float3)1.0 + G_ID*test;
+
+    _QuadDataBufferWrite[DT_ID].position = pos;
+    _QuadDataBufferWrite[DT_ID].rotation = rot;
+    _QuadDataBufferWrite[DT_ID].scale = scl;
+
+}
