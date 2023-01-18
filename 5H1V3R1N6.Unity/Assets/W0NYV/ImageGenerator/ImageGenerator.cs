@@ -15,7 +15,8 @@ namespace W0NYV.Shivering
             {
                 GameObject o = Instantiate(_image, Vector3.zero, Quaternion.identity);
                 o.transform.SetParent(_imageParent.transform);
-                o.transform.localPosition = new Vector3(0f, 0f, 0.3f);
+                o.transform.localPosition = new Vector3(0f, 0f, 0.301f);
+                o.transform.localRotation = Quaternion.Euler(Vector3.zero);
                 Debug.Log("生成");
             }
         }
