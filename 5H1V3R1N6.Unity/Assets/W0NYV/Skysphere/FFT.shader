@@ -1,4 +1,4 @@
-Shader "Unlit/FFT"
+Shader "FFT/FFTUnlit"
 {
     Properties
     {
@@ -51,10 +51,11 @@ Shader "Unlit/FFT"
 
                 float2 uv = i.uv;
 
-                float2 wow = floor(uv * 20.0);
-                uv = frac(uv * 20.0);
+                float2 fl = uv;
+                fl.y = floor(frac(uv.y+_Time.y*0.2) * 8.0);
 
-                fixed4 col = fixed4(uv, abs(sin(_Time.y + wow.x + wow.y)), 1.0);
+                fl.x = floor(uv.x * 16.0) + (fl.y*16.0);
+                fixed4 col = tex2D(_MainTex, fl/128.0);
 
                 // apply fog
                 UNITY_APPLY_FOG(i.fogCoord, col);
