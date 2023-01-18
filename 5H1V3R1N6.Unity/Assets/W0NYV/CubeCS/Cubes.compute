@@ -1,0 +1,22 @@
+#pragma kernel RingCS
+
+#define THREAD_SIZE 3
+
+RWStructuredBuffer<float3> _CubePositionBufferWrite;
+
+int _CubeCount;
+float _Radius;
+
+[numthreads(THREAD_SIZE, 1, 1)]
+void RingCS(uint3 DTid : SV_DispatchThreadID, uint3 Gid : SV_GroupID, uint3 GTid : SV_GroupThreadID, uint GI : SV_GroupIndex)
+{
+    const unsigned int P_ID = DTid.x; //自身のID
+
+    float tau = acos(-1.0) * 2.0;
+
+    float3 pos = float3(sin(tau / (float)_CubeCount * (float)P_ID) * _Radius, 
+                        0.0, 
+                        cos(tau / (float)_CubeCount * (float)P_ID) * _Radius);
+
+    _CubePositionBufferWrite[P_ID] = pos;
+}
