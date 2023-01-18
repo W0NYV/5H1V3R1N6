@@ -46,7 +46,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _maxObjectNum: 128
+  _modeNum: 0
+  _preModeNum: 0
   _quadsCS: {fileID: 7200000, guid: 338c936a05c2c9f448cca685dd004420, type: 3}
+  _lerpValue: 1
+  _lerpSpeed: 0.1
 --- !u!114 &2186044896064210824
 MonoBehaviour:
   m_ObjectHideFlags: 0

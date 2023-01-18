@@ -127,13 +127,13 @@ Shader "GPUQuads/GPUQuads"
             e.g = e.r;
             e.b = e.r;
 
-            // float l = step(1.0, 0.01/length(uv.x));
-            // float l2 = step(1.0, 0.01/length(1 - uv.x));
-            // float l3 = step(1.0, 0.01/length(uv.y));
-            // float l4 = step(1.0, 0.01/length(1 - uv.y));
+            float l = step(1.0, 0.01/length(uv.x));
+            float l2 = step(1.0, 0.01/length(1 - uv.x));
+            float l3 = step(1.0, 0.01/length(uv.y));
+            float l4 = step(1.0, 0.01/length(1 - uv.y));
 
-            // c = fixed4(l+l2+l3+l4, l+l2+l3+l4, l+l2+l3+l4, l+l2+l3+l4);
-            // e = fixed4(l+l2+l3+l4, l+l2+l3+l4, l+l2+l3+l4, l+l2+l3+l4);
+            c += fixed4(l+l2+l3+l4, l+l2+l3+l4, l+l2+l3+l4, l+l2+l3+l4);
+            e += fixed4(l+l2+l3+l4, l+l2+l3+l4, l+l2+l3+l4, l+l2+l3+l4);
 
             o.Albedo = c.rgb;
             o.Emission = _EmissionColor * e;

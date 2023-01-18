@@ -1,6 +1,11 @@
-#pragma kernel BoxCS
+#pragma kernel TransformCS
 
 #define THREAD_SIZE 4
+
+#include "./LoopBox.cginc"
+#include "./OneBox.cginc"
+#include "./Line.cginc"
+#include "./Tile.cginc"
 
 struct QuadData
 {
@@ -12,9 +17,13 @@ struct QuadData
 RWStructuredBuffer<QuadData> _QuadDataBufferWrite;
 
 int _QuadCount;
+int _ModeNum;
+int _PreModeNum;
+float _LerpValue;
+float _Time;
 
 [numthreads(THREAD_SIZE, 1, 1)]
-void BoxCS(uint3 DTid : SV_DispatchThreadID, uint3 Gid : SV_GroupID, uint3 GTid : SV_GroupThreadID, uint GI : SV_GroupIndex)
+void TransformCS(uint3 DTid : SV_DispatchThreadID, uint3 Gid : SV_GroupID, uint3 GTid : SV_GroupThreadID, uint GI : SV_GroupIndex)
 {
     const unsigned int GT_ID = GTid.x; //グループ内のスレッドID
     const unsigned int G_ID = Gid.x;
@@ -22,35 +31,35 @@ void BoxCS(uint3 DTid : SV_DispatchThreadID, uint3 Gid : SV_GroupID, uint3 GTid 
 
     float3 pos = (float3)0;
     float3 rot = (float3)0;
+    float3 scl = (float3)0;
 
-    float test = 10.0;
+    float3x3 dstMatrix = (float3x3)0;
 
-    if(GT_ID == 0)
-    {
-        pos = float3(0.5 + 0.5*G_ID*test, 0, 0);
-        rot = float3(0, 270, 0);
-    }
-    else if(GT_ID == 1)
-    {
-        pos = float3(-0.5 + -0.5*G_ID*test,  0, 0);
-        rot = float3(0, 90, 0);
+    float3x3 oneBoxMatrix = oneBox(GT_ID);
+    float3x3 loopBoxMatrix = loopBox(GT_ID, G_ID, 1.0);
+    float3x3 lineMatrix = lineMat(DT_ID, _QuadCount, _Time);
+    float3x3 tileMatrix = tileMat(DT_ID, _QuadCount, _Time);
 
-    }
-    else if(GT_ID == 2)
+    float3x3 matArr[4];
+    matArr[0] = oneBoxMatrix;
+    matArr[1] = loopBoxMatrix;
+    matArr[2] = lineMatrix;
+    matArr[3] = tileMatrix;
+
+    if(_PreModeNum == _ModeNum)
     {
-        pos = float3(0, 0, 0.5 + 0.5*G_ID*test);
-        rot = float3(0, 180, 0);
+        dstMatrix = matArr[_ModeNum];
     }
-    else if(GT_ID == 3)
+    else
     {
-        pos = float3(0, 0, -0.5 + -0.5*G_ID*test);
-        rot = float3(0, 0, 0);
+        dstMatrix = lerp(matArr[_PreModeNum], matArr[_ModeNum], _LerpValue);
     }
 
-    float3 scl = (float3)1.0 + G_ID*test;
+    pos = dstMatrix._11_12_13;
+    rot = dstMatrix._21_22_23;
+    scl = dstMatrix._31_32_33;
 
     _QuadDataBufferWrite[DT_ID].position = pos;
     _QuadDataBufferWrite[DT_ID].rotation = rot;
     _QuadDataBufferWrite[DT_ID].scale = scl;
-
 }
