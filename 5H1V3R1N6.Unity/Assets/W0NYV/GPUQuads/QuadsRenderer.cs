@@ -35,6 +35,20 @@ namespace W0NYV.Shivering.GPUQuads
             Graphics.DrawMeshInstancedIndirect(_instanceMesh, 0, _instanceRenderMaterial, bounds, argsBuffer);
         }
 
+        #region public Methods
+
+        public void SetOutlineIntensity(float v)
+        {
+            _instanceRenderMaterial.SetFloat("_OutlineIntensity", v);
+        }
+
+        public void SetInsideIntensity(float v)
+        {
+            _instanceRenderMaterial.SetFloat("_InsideIntensity", v);
+        }
+
+        #endregion
+
         #region MonoBehaviour Methods
 
         private void Start()

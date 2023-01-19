@@ -10,6 +10,9 @@ Shader "GPUQuads/GPUQuads"
         [HDR]_EmissionColor ("EmissionColor", Color) = (1,1,1,1)
         _EmissionTex ("Emission Texture", 2D) = "white" {}
         _Cutoff ("Cutoff", Range(0, 1)) = 0.5
+
+        _InsideIntensity ("InsideIntensity", Range(0.0, 1.0)) = 1.0
+        _OutlineIntensity ("OutlineIntensity", Range(0.0, 1.0)) = 1.0
     }
     SubShader
     {
@@ -46,6 +49,9 @@ Shader "GPUQuads/GPUQuads"
         sampler2D _EmissionTex;
 
         UNITY_DECLARE_TEX2DARRAY(_TexArray);
+
+        float _InsideIntensity;
+        float _OutlineIntensity;
 
         float4x4 eulerAnglesToRotationMatrix(float3 angles)
         {
@@ -142,13 +148,19 @@ Shader "GPUQuads/GPUQuads"
             // e.g = e.r;
             // e.b = e.r;
 
+            c *= _InsideIntensity;
+            e *= _InsideIntensity;
+
+            //Outline
             float l = step(1.0, 0.01/length(uv.x));
             float l2 = step(1.0, 0.01/length(1 - uv.x));
             float l3 = step(1.0, 0.01/length(uv.y));
             float l4 = step(1.0, 0.01/length(1 - uv.y));
 
-            c += fixed4(l+l2+l3+l4, l+l2+l3+l4, l+l2+l3+l4, l+l2+l3+l4);
-            e += fixed4(l+l2+l3+l4, l+l2+l3+l4, l+l2+l3+l4, l+l2+l3+l4);
+            fixed4 outline = fixed4(l+l2+l3+l4, l+l2+l3+l4, l+l2+l3+l4, l+l2+l3+l4);
+
+            c += outline*_OutlineIntensity;
+            e += outline*_OutlineIntensity;
 
             o.Albedo = c.rgb;
             o.Emission = _EmissionColor * e;

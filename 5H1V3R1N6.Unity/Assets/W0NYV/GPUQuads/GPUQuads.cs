@@ -66,11 +66,10 @@ namespace W0NYV.Shivering.GPUQuads
 
         private void Simulation()
         {
-
-            if(Input.GetKeyDown("r")) ChangeMode(0);
-            if(Input.GetKeyDown("t")) ChangeMode(1);
-            if(Input.GetKeyDown("y")) ChangeMode(2);
-            if(Input.GetKeyDown("u")) ChangeMode(3);
+            // if(Input.GetKeyDown("r")) ChangeMode(0);
+            // if(Input.GetKeyDown("t")) ChangeMode(1);
+            // if(Input.GetKeyDown("y")) ChangeMode(2);
+            // if(Input.GetKeyDown("u")) ChangeMode(3);
 
             ComputeShader cs = _quadsCS;
             int id = -1;
@@ -99,15 +98,6 @@ namespace W0NYV.Shivering.GPUQuads
             cs.SetBuffer(id, "_QuadDataBufferWrite", _quadDataBuffer);
 
             cs.Dispatch(id, threadGroupSize, 1, 1);
-
-            // Vector3[] result = new Vector3[_maxObjectNum];
-            // _cubePositionBuffer.GetData(result);
-
-            // foreach (var pos in result)
-            // {   
-            //     Debug.Log(pos);
-            // }
-
         }
 
         private void ReleaseBuffer()
@@ -118,6 +108,42 @@ namespace W0NYV.Shivering.GPUQuads
                 _quadDataBuffer = null;
             }
         }
+
+        #region public Methods
+
+        public void ChangeOneBoxMode(float v)
+        {
+            if(v == 1.0)
+            {
+                ChangeMode(0);
+            }
+        }
+
+        public void ChangeLoopBoxMode(float v)
+        {
+            if(v == 1.0)
+            {
+                ChangeMode(1);
+            }
+        }
+
+        public void ChangeLineMode(float v)
+        {
+            if(v == 1.0)
+            {
+                ChangeMode(2);
+            }
+        }
+
+        public void ChangeTileMode(float v)
+        {
+            if(v == 1.0)
+            {
+                ChangeMode(3);
+            }
+        }
+
+        #endregion
 
         #region MonoBehaviour Methods
 
