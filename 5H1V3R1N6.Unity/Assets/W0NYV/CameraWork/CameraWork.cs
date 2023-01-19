@@ -14,6 +14,19 @@ namespace W0NYV.Shivering.CameraWork
         Vector3 current;
         Vector3 rnd;
 
+        public void Front(float v)
+        {
+            if(v == 1.0f)
+            {
+                if(t>1f)
+                {
+                    t = 0;
+                    current = transform.position;
+                    rnd = new Vector3(0, 0, -3f);
+                }
+            }
+        }
+
         public void Translate(float v)
         {
             if(v == 1.0f)
