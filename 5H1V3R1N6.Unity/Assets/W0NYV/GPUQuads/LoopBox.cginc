@@ -9,13 +9,13 @@ float3x3 loopBox(int gtid, int gid, float sclRatio)
         pos = float3(0.5 + 0.5*gid*sclRatio, 0, 0);
         rot = float3(0, 270, 0);
     }
-    else if(gtid == 1)
+    else if(gtid == 2)
     {
         pos = float3(-0.5 + -0.5*gid*sclRatio,  0, 0);
         rot = float3(0, 90, 0);
 
     }
-    else if(gtid == 2)
+    else if(gtid == 1)
     {
         pos = float3(0, 0, 0.5 + 0.5*gid*sclRatio);
         rot = float3(0, 180, 0);

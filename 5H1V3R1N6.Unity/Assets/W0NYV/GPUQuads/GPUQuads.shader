@@ -2,6 +2,10 @@ Shader "GPUQuads/GPUQuads"
 {
     Properties
     {
+
+        _TexArray ("Texture Array", 2DArray) = "" {}
+        _TexArrayIndex ("Texture Array Index", float) = 0.0
+
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
         [HDR]_EmissionColor ("EmissionColor", Color) = (1,1,1,1)
         _EmissionTex ("Emission Texture", 2D) = "white" {}
@@ -17,10 +21,12 @@ Shader "GPUQuads/GPUQuads"
         // Physically based Standard lighting model, and enable shadows on all light types
         #pragma surface surf Standard vertex:vert alphatest:_Cutoff
         #pragma instancing_options procedural:setup
+        #pragma require 2darray
 
         struct Input
         {
             float2 uv_MainTex;
+            float texIndex;
         };
 
         struct QuadData
@@ -28,6 +34,7 @@ Shader "GPUQuads/GPUQuads"
             float3 position;
             float3 rotation;
             float3 scale;
+            float texIndex;
         };
 
         #ifdef UNITY_PROCEDURAL_INSTANCING_ENABLED
@@ -37,6 +44,8 @@ Shader "GPUQuads/GPUQuads"
         sampler2D _MainTex;
         half4 _EmissionColor;
         sampler2D _EmissionTex;
+
+        UNITY_DECLARE_TEX2DARRAY(_TexArray);
 
         float4x4 eulerAnglesToRotationMatrix(float3 angles)
         {
@@ -77,8 +86,10 @@ Shader "GPUQuads/GPUQuads"
             );
         }
 
-        void vert(inout appdata_full v)
+        void vert(inout appdata_full v, out Input o)
         {
+            UNITY_INITIALIZE_OUTPUT(Input, o);
+
             #ifdef UNITY_PROCEDURAL_INSTANCING_ENABLED
 
             float3 pos = _QuadDataBuffer[unity_InstanceID].position;
@@ -99,6 +110,8 @@ Shader "GPUQuads/GPUQuads"
 
             v.normal = normalize(mul(object2world, v.vertex));
 
+            o.texIndex = _QuadDataBuffer[unity_InstanceID].texIndex;
+
             #endif
         }
 
@@ -118,14 +131,16 @@ Shader "GPUQuads/GPUQuads"
 
             kari = frac(kari*10.0);
 
-            fixed4 c = tex2D(_MainTex, kari);
-            c.g = c.r;
-            c.b = c.r;
-            c.a = c.r;
+            // fixed4 c = tex2D(_MainTex, kari);
+            fixed4 c = UNITY_SAMPLE_TEX2DARRAY(_TexArray, float3(IN.uv_MainTex, IN.texIndex));
+            // c.g = c.r;
+            // c.b = c.r;
+            //c.a = c.r;
             
-            fixed4 e = tex2D(_EmissionTex, kari);
-            e.g = e.r;
-            e.b = e.r;
+            //fixed4 e = tex2D(_EmissionTex, kari);
+            fixed4 e = UNITY_SAMPLE_TEX2DARRAY(_TexArray, float3(IN.uv_MainTex, IN.texIndex));
+            // e.g = e.r;
+            // e.b = e.r;
 
             float l = step(1.0, 0.01/length(uv.x));
             float l2 = step(1.0, 0.01/length(1 - uv.x));
