@@ -47,6 +47,18 @@ namespace W0NYV.Shivering.GPUQuads
             _instanceRenderMaterial.SetFloat("_InsideIntensity", v);
         }
 
+        public void ChangeInside(float v)
+        {
+            if(v == 1.0)
+            {
+                _instanceRenderMaterial.EnableKeyword("_USE_TEXT_TEX");
+            }
+            else
+            {
+                _instanceRenderMaterial.DisableKeyword("_USE_TEXT_TEX");
+            }
+        }
+
         #endregion
 
         #region MonoBehaviour Methods

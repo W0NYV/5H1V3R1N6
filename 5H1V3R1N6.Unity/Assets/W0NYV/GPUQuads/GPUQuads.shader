@@ -2,10 +2,6 @@ Shader "GPUQuads/GPUQuads"
 {
     Properties
     {
-
-        _TexArray ("Texture Array", 2DArray) = "" {}
-        _TexArrayIndex ("Texture Array Index", float) = 0.0
-
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
         [HDR]_EmissionColor ("EmissionColor", Color) = (1,1,1,1)
         _EmissionTex ("Emission Texture", 2D) = "white" {}
@@ -13,6 +9,12 @@ Shader "GPUQuads/GPUQuads"
 
         _InsideIntensity ("InsideIntensity", Range(0.0, 1.0)) = 1.0
         _OutlineIntensity ("OutlineIntensity", Range(0.0, 1.0)) = 1.0
+
+        _TexArray ("Texture Array", 2DArray) = "" {}
+        _TexArrayIndex ("Texture Array Index", float) = 0.0
+
+        [Toggle(_USE_TEXT_TEX)]_UseTextTex("Use TextTex", Float) = 0
+
     }
     SubShader
     {
@@ -25,6 +27,8 @@ Shader "GPUQuads/GPUQuads"
         #pragma surface surf Standard vertex:vert alphatest:_Cutoff
         #pragma instancing_options procedural:setup
         #pragma require 2darray
+
+        #pragma multi_compile _ _USE_TEXT_TEX
 
         struct Input
         {
@@ -129,24 +133,29 @@ Shader "GPUQuads/GPUQuads"
 
             float2 fl = uv;
 
+            fixed4 c = (fixed4)0;
+            fixed4 e = (fixed4)0;
+
             fl.y = floor(frac(IN.uv_MainTex.y+_Time.y*0.1) * 8.0);
             fl.x = floor(uv.x * 16.0) + (fl.y*16.0);
-            // fixed4 col = tex2D(_MainTex, fl/128.0);
 
             float2 kari = fl/128.0;
 
             kari = frac(kari*10.0);
 
-            // fixed4 c = tex2D(_MainTex, kari);
-            fixed4 c = UNITY_SAMPLE_TEX2DARRAY(_TexArray, float3(IN.uv_MainTex, IN.texIndex));
-            // c.g = c.r;
-            // c.b = c.r;
-            //c.a = c.r;
+            c = tex2D(_MainTex, kari);
+            c.g = c.r;
+            c.b = c.r;
+            c.a = c.r;
             
-            //fixed4 e = tex2D(_EmissionTex, kari);
-            fixed4 e = UNITY_SAMPLE_TEX2DARRAY(_TexArray, float3(IN.uv_MainTex, IN.texIndex));
-            // e.g = e.r;
-            // e.b = e.r;
+            e = tex2D(_EmissionTex, kari);
+            e.g = e.r;
+            e.b = e.r;
+
+            #if _USE_TEXT_TEX
+            e = UNITY_SAMPLE_TEX2DARRAY(_TexArray, float3(uv, IN.texIndex));
+            c = UNITY_SAMPLE_TEX2DARRAY(_TexArray, float3(uv, IN.texIndex));
+            #endif
 
             c *= _InsideIntensity;
             e *= _InsideIntensity;
