@@ -154,8 +154,8 @@ Shader "GPUQuads/GPUQuads"
             e.g = e.r;
             e.b = e.r;
 
-            c = eye(uv, _Time.y);
-            e = eye(uv, _Time.y);
+            c = eye(uv, _Time.y, IN.texIndex);
+            e = eye(uv, _Time.y, IN.texIndex);
 
             #if _USE_TEXT_TEX
             e = UNITY_SAMPLE_TEX2DARRAY(_TexArray, float3(uv, IN.texIndex));

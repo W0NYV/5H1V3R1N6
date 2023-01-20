@@ -7,7 +7,7 @@ float S(float x)
     return smoothstep(-smooth, smooth, x);
 }
 
-fixed4 eye(float2 uv, float time){
+fixed4 eye(float2 uv, float time, float offset){
 
     float openDeg = 4.5;
 
@@ -16,7 +16,7 @@ fixed4 eye(float2 uv, float time){
     float fsty = frac(uv.y) - 0.5;
     float2 fst = float2(uv.x * PI * 2.0 - 0.5 * PI, fsty);
     
-    float eyeOpen = (sin(time*2.0) + 1.0) / 2.0;
+    float eyeOpen = (sin(time*2.0 + (acos(-1.0)*2.0*(offset/4.0))) + 1.0) / 2.0;
     eyeOpen = 1.0 - pow(eyeOpen, 3.0);
     
     float col = (sin(fst.x) + 1.)/2.0;

@@ -3,6 +3,8 @@ Shader "PostEffect/PostEffect"
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
+
+        [Toggle(_BUILD_UP)]_BuildUp("Build up", Float) = 0
     }
     SubShader
     {
@@ -14,6 +16,8 @@ Shader "PostEffect/PostEffect"
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
+
+            #pragma multi_compile _ _BUILD_UP
 
             #include "UnityCG.cginc"
 
@@ -54,6 +58,11 @@ Shader "PostEffect/PostEffect"
             fixed4 frag (v2f i) : SV_Target
             {
                 fixed4 col = tex2D(_MainTex, i.uv);
+
+                #if _BUILD_UP
+                fixed4 c = lerp(fixed4(0.4, 0.0, 1.0, 1.0), fixed4(0.7, 1.0, 0.0, 1.0), (sin(_Time.y*80.0)+1.0)*0.5);
+                col = lerp(col, (1.0-col)*c, (sin(_Time.y*40.0)+1.0)*0.5);
+                #endif
 
                 col.rgb *= 1.0 - grain(i.uv, 128.0);
 

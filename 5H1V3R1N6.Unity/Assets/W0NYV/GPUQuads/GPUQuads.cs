@@ -37,6 +37,7 @@ namespace W0NYV.Shivering.GPUQuads
 
         [SerializeField] private float _lerpValue = 1f;
         [SerializeField] private float _lerpSpeed = 1f;
+        [SerializeField] private float _timeSpeed = 1f;
         
         private void InitBuffer()
         {
@@ -65,11 +66,11 @@ namespace W0NYV.Shivering.GPUQuads
         private void Simulation()
         {
 
-            if(Input.GetKeyDown("r")) ChangeMode(0);
-            if(Input.GetKeyDown("t")) ChangeMode(1);
-            if(Input.GetKeyDown("y")) ChangeMode(2);
-            if(Input.GetKeyDown("u")) ChangeMode(3);
-            if(Input.GetKeyDown("i")) ChangeMode(4);
+            // if(Input.GetKeyDown("r")) ChangeMode(0);
+            // if(Input.GetKeyDown("t")) ChangeMode(1);
+            // if(Input.GetKeyDown("y")) ChangeMode(2);
+            // if(Input.GetKeyDown("u")) ChangeMode(3);
+            // if(Input.GetKeyDown("i")) ChangeMode(4);
 
             ComputeShader cs = _quadsCS;
             int id = -1;
@@ -91,7 +92,7 @@ namespace W0NYV.Shivering.GPUQuads
             cs.SetInt("_ModeNum", _modeNum);
             cs.SetInt("_PreModeNum", _preModeNum);
             cs.SetFloat("_LerpValue", _lerpValue);
-            cs.SetFloat("_Time", Time.time);
+            cs.SetFloat("_Time", Time.time * _timeSpeed);
 
             cs.SetBuffer(id, "_QuadDataBufferWrite", _quadDataBuffer);
 
@@ -147,6 +148,11 @@ namespace W0NYV.Shivering.GPUQuads
             {
                 ChangeMode(4);
             }
+        }
+
+        public void BuildUp(float v)
+        {
+            _timeSpeed = 1.0f + 19.0f*v;
         }
 
         #endregion
