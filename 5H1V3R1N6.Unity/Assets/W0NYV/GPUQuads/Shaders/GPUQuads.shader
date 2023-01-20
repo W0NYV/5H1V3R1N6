@@ -30,6 +30,8 @@ Shader "GPUQuads/GPUQuads"
 
         #pragma multi_compile _ _USE_TEXT_TEX
 
+        #include "./Eye.cginc"
+
         struct Input
         {
             float2 uv_MainTex;
@@ -151,6 +153,9 @@ Shader "GPUQuads/GPUQuads"
             e = tex2D(_EmissionTex, kari);
             e.g = e.r;
             e.b = e.r;
+
+            c = eye(uv, _Time.y);
+            e = eye(uv, _Time.y);
 
             #if _USE_TEXT_TEX
             e = UNITY_SAMPLE_TEX2DARRAY(_TexArray, float3(uv, IN.texIndex));
