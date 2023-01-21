@@ -17,7 +17,7 @@ float3x3 sphereMat(int dtid, int quadCount, float time)
     float rotz = atan2(v.y, v.x) * 180.0/acos(-1.0);
 
     float3 rot = float3(rotx, roty, rotz);
-    float3 scl = (float3)1.0;
+    float3 scl = (float3)frac(sin((float)dtid*10000.0)) + 0.4;
 
     return float3x3(pos, rot, scl);
 }

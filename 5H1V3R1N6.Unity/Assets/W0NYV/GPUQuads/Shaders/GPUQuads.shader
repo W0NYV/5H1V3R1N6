@@ -8,7 +8,9 @@ Shader "GPUQuads/GPUQuads"
         _Cutoff ("Cutoff", Range(0, 1)) = 0.5
 
         _InsideIntensity ("InsideIntensity", Range(0.0, 1.0)) = 1.0
+
         _OutlineIntensity ("OutlineIntensity", Range(0.0, 1.0)) = 1.0
+        _OutlineWidth ("OutlineWidth", Range(0.003, 0.01)) = 0.01
 
         _TexArray ("Texture Array", 2DArray) = "" {}
         _TexArrayIndex ("Texture Array Index", float) = 0.0
@@ -36,6 +38,7 @@ Shader "GPUQuads/GPUQuads"
         {
             float2 uv_MainTex;
             float texIndex;
+            float amplitude;
         };
 
         struct QuadData
@@ -43,7 +46,7 @@ Shader "GPUQuads/GPUQuads"
             float3 position;
             float3 rotation;
             float3 scale;
-            float texIndex;
+            float index;
         };
 
         #ifdef UNITY_PROCEDURAL_INSTANCING_ENABLED
@@ -57,7 +60,9 @@ Shader "GPUQuads/GPUQuads"
         UNITY_DECLARE_TEX2DARRAY(_TexArray);
 
         float _InsideIntensity;
+
         float _OutlineIntensity;
+        float _OutlineWidth;
 
         float4x4 eulerAnglesToRotationMatrix(float3 angles)
         {
@@ -122,7 +127,9 @@ Shader "GPUQuads/GPUQuads"
 
             v.normal = normalize(mul(object2world, v.vertex));
 
-            o.texIndex = _QuadDataBuffer[unity_InstanceID].texIndex;
+            o.texIndex = floor(fmod(_QuadDataBuffer[unity_InstanceID].index, 4.0));
+
+            o.amplitude = tex2Dlod(_MainTex, float4(_QuadDataBuffer[unity_InstanceID].index/128.0, 0.0, 0.0, 0.0)).r;
 
             #endif
         }
@@ -158,27 +165,27 @@ Shader "GPUQuads/GPUQuads"
             e = eye(uv, _Time.y, IN.texIndex);
 
             #if _USE_TEXT_TEX
-            e = UNITY_SAMPLE_TEX2DARRAY(_TexArray, float3(uv, IN.texIndex));
-            c = UNITY_SAMPLE_TEX2DARRAY(_TexArray, float3(uv, IN.texIndex));
+            c = UNITY_SAMPLE_TEX2DARRAY(_TexArray, float3(uv, floor(fmod(_Time.y*2.0+IN.texIndex, 4.0))));
+            e = c;
             #endif
 
             c *= _InsideIntensity;
             e *= _InsideIntensity;
 
             //Outline
-            float l = step(1.0, 0.01/length(uv.x));
-            float l2 = step(1.0, 0.01/length(1 - uv.x));
-            float l3 = step(1.0, 0.01/length(uv.y));
-            float l4 = step(1.0, 0.01/length(1 - uv.y));
+            float l = step(1.0, _OutlineWidth/length(uv.x));
+            float l2 = step(1.0, _OutlineWidth/length(1 - uv.x));
+            float l3 = step(1.0, _OutlineWidth/length(uv.y));
+            float l4 = step(1.0, _OutlineWidth/length(1 - uv.y));
 
             fixed4 outline = fixed4(l+l2+l3+l4, l+l2+l3+l4, l+l2+l3+l4, l+l2+l3+l4);
 
             c += outline*_OutlineIntensity;
             e += outline*_OutlineIntensity;
 
-            o.Albedo = c.rgb;
-            o.Emission = _EmissionColor * e;
-            o.Alpha = c.a;
+            o.Albedo = c.rgb * (fixed4)IN.amplitude;
+            o.Emission = _EmissionColor * e * (fixed4)IN.amplitude;
+            o.Alpha = c.a * (fixed4)IN.amplitude;
         }
         ENDCG
     }
