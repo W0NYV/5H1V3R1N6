@@ -15,6 +15,10 @@ namespace W0NYV.Shivering.CameraWork
         Vector3 current;
         Vector3 rnd;
 
+        //微妙に動き続けるやつ
+        bool canMove = false;
+        Vector3 rndDir;
+
         public void ChangeAimDistance(float v)
         {
             float value = v*27f + 3f;
@@ -30,6 +34,7 @@ namespace W0NYV.Shivering.CameraWork
                     t = 0;
                     current = transform.position;
                     rnd = new Vector3(0, 0, -_aimDistance);
+                    canMove = false;
                 }
             }
         }
@@ -43,6 +48,7 @@ namespace W0NYV.Shivering.CameraWork
                     t = 0;
                     current = transform.position;
                     rnd = Random.onUnitSphere * _aimDistance;
+                    canMove = true;
                 }   
             }
         }
@@ -51,14 +57,19 @@ namespace W0NYV.Shivering.CameraWork
         {
             current = transform.position;
             rnd = Random.onUnitSphere * _aimDistance;
+            rndDir = Vector3.Normalize(new Vector3(3f, 3f, 3f));
         }
 
         private void Update()
         {
             
-            if(t<1f)t += Time.deltaTime * _speed;  
+            if(t<1f)
+            {
+                t += Time.deltaTime * _speed;
+                transform.position = Vector3.Slerp(current, rnd, 3*t*t - 2*t*t*t);
+            }
 
-            transform.position = Vector3.Slerp(current, rnd, 3*t*t - 2*t*t*t);
+            if(canMove)transform.position += rndDir * Time.deltaTime * 0.2f;
 
             var aim = _aimObj.transform.position - transform.position;
             var look = Quaternion.LookRotation(aim, Vector3.up);
