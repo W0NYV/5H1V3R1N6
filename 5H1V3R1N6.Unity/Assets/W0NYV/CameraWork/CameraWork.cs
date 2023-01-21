@@ -8,11 +8,18 @@ namespace W0NYV.Shivering.CameraWork
     {
         [SerializeField] private GameObject _aimObj;
         [SerializeField] private float _speed = 1f;
+        [SerializeField] private float _aimDistance = 3f;
 
         float t = 0;
     
         Vector3 current;
         Vector3 rnd;
+
+        public void ChangeAimDistance(float v)
+        {
+            float value = v*27f + 3f;
+            _aimDistance = value;
+        }
 
         public void Front(float v)
         {
@@ -22,7 +29,7 @@ namespace W0NYV.Shivering.CameraWork
                 {
                     t = 0;
                     current = transform.position;
-                    rnd = new Vector3(0, 0, -3f);
+                    rnd = new Vector3(0, 0, -_aimDistance);
                 }
             }
         }
@@ -35,7 +42,7 @@ namespace W0NYV.Shivering.CameraWork
                 {
                     t = 0;
                     current = transform.position;
-                    rnd = Random.onUnitSphere * 3f;
+                    rnd = Random.onUnitSphere * _aimDistance;
                 }   
             }
         }
@@ -43,7 +50,7 @@ namespace W0NYV.Shivering.CameraWork
         private void Start()
         {
             current = transform.position;
-            rnd = Random.onUnitSphere * 3f;
+            rnd = Random.onUnitSphere * _aimDistance;
         }
 
         private void Update()
