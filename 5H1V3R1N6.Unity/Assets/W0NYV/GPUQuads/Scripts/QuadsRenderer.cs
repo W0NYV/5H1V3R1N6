@@ -47,14 +47,29 @@ namespace W0NYV.Shivering.GPUQuads
             _instanceRenderMaterial.SetFloat("_InsideIntensity", v);
         }
 
-        public void ChangeInside(float v)
+        public void ChangeToTextTex(float v)
         {
             if(v == 1.0)
             {
                 _instanceRenderMaterial.EnableKeyword("_USE_TEXT_TEX");
+                _instanceRenderMaterial.DisableKeyword("_USE_EYE_TEX");
             }
-            else
+        }
+
+        public void ChangeToEyeTex(float v)
+        {
+            if(v == 1.0)
             {
+                _instanceRenderMaterial.EnableKeyword("_USE_EYE_TEX");
+                _instanceRenderMaterial.DisableKeyword("_USE_TEXT_TEX");
+            }
+        }
+
+        public void ChangeToFFTTex(float v)
+        {
+            if(v == 1.0)
+            {
+                _instanceRenderMaterial.DisableKeyword("_USE_EYE_TEX");
                 _instanceRenderMaterial.DisableKeyword("_USE_TEXT_TEX");
             }
         }

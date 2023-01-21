@@ -16,6 +16,7 @@ Shader "GPUQuads/GPUQuads"
         _TexArrayIndex ("Texture Array Index", float) = 0.0
 
         [Toggle(_USE_TEXT_TEX)]_UseTextTex("Use TextTex", Float) = 0
+        [Toggle(_USE_EYE_TEX)]_UseEyeTex("Use EyeTex", Float) = 0
 
     }
     SubShader
@@ -31,6 +32,7 @@ Shader "GPUQuads/GPUQuads"
         #pragma require 2darray
 
         #pragma multi_compile _ _USE_TEXT_TEX
+        #pragma multi_compile _ _USE_EYE_TEX
 
         #include "./Eye.cginc"
 
@@ -140,29 +142,24 @@ Shader "GPUQuads/GPUQuads"
         {
             float2 uv = IN.uv_MainTex;
 
-            float2 fl = uv;
-
             fixed4 c = (fixed4)0;
             fixed4 e = (fixed4)0;
 
+            float2 fl = uv;
             fl.y = floor(frac(IN.uv_MainTex.y+_Time.y*0.1) * 8.0);
             fl.x = floor(uv.x * 16.0) + (fl.y*16.0);
+            fl = fl/128.0;
 
-            float2 kari = fl/128.0;
-
-            kari = frac(kari*10.0);
-
-            c = tex2D(_MainTex, kari);
+            c = tex2D(_MainTex, fl);
             c.g = c.r;
             c.b = c.r;
             c.a = c.r;
-            
-            e = tex2D(_EmissionTex, kari);
-            e.g = e.r;
-            e.b = e.r;
+            e = c;
 
+            #if _USE_EYE_TEX
             c = eye(uv, _Time.y, IN.texIndex);
-            e = eye(uv, _Time.y, IN.texIndex);
+            e = c;
+            #endif
 
             #if _USE_TEXT_TEX
             c = UNITY_SAMPLE_TEX2DARRAY(_TexArray, float3(uv, floor(fmod(_Time.y*2.0+IN.texIndex, 4.0))));
@@ -186,6 +183,10 @@ Shader "GPUQuads/GPUQuads"
             o.Albedo = c.rgb * (fixed4)IN.amplitude;
             o.Emission = _EmissionColor * e * (fixed4)IN.amplitude;
             o.Alpha = c.a * (fixed4)IN.amplitude;
+
+            // o.Albedo = c.rgb;
+            // o.Emission = _EmissionColor * e;
+            // o.Alpha = c.a;
         }
         ENDCG
     }
