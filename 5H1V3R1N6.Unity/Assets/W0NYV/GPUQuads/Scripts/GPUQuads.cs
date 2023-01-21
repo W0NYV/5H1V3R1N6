@@ -39,6 +39,9 @@ namespace W0NYV.Shivering.GPUQuads
         [SerializeField] private float _lerpSpeed = 1f;
         [SerializeField] private float _timeSpeed = 1f;
         
+        [SerializeField] private bool canAccelerate = false;
+        float accelerateTime = 0f;
+
         private void InitBuffer()
         {
             _quadDataBuffer = new ComputeBuffer(_maxObjectNum, Marshal.SizeOf(typeof(QuadData)));
@@ -61,6 +64,33 @@ namespace W0NYV.Shivering.GPUQuads
         {
             _modeNum = modeNum;
             _lerpValue = 0f;
+        }
+
+        private float Fract(float t)
+        {
+            return t - Mathf.Floor(t);
+        }
+
+        private float Accelerate()
+        {
+            if(canAccelerate)
+            {
+                accelerateTime += Time.deltaTime * 3.0f;
+
+                float t = (0.05f/Fract(accelerateTime)-0.05f)*3f;
+
+                if(1f <= accelerateTime)
+                {
+                    canAccelerate = false;
+                }
+
+                return t;
+            }
+            else
+            {
+                accelerateTime = 0f;
+                return 0f;
+            }
         }
 
         private void Simulation()
@@ -92,7 +122,7 @@ namespace W0NYV.Shivering.GPUQuads
             cs.SetInt("_ModeNum", _modeNum);
             cs.SetInt("_PreModeNum", _preModeNum);
             cs.SetFloat("_LerpValue", _lerpValue);
-            cs.SetFloat("_Time", Time.time * _timeSpeed);
+            cs.SetFloat("_Time", Time.time * _timeSpeed - Accelerate());
 
             cs.SetBuffer(id, "_QuadDataBufferWrite", _quadDataBuffer);
 
@@ -153,6 +183,11 @@ namespace W0NYV.Shivering.GPUQuads
         public void BuildUp(float v)
         {
             _timeSpeed = 1.0f + 19.0f*v;
+        }
+
+        public void DoAccelerate(float v)
+        {
+            canAccelerate = true;
         }
 
         #endregion
