@@ -17,7 +17,7 @@ Shader "GPUQuads/GPUQuads"
 
         [Toggle(_USE_TEXT_TEX)]_UseTextTex("Use TextTex", Float) = 0
         [Toggle(_USE_EYE_TEX)]_UseEyeTex("Use EyeTex", Float) = 0
-
+        [Toggle(_USE_FFT_AMPLITUDE)]_UseFFTAmplitude("Use FFT Amplitude", Float) = 0
     }
     SubShader
     {
@@ -33,6 +33,7 @@ Shader "GPUQuads/GPUQuads"
 
         #pragma multi_compile _ _USE_TEXT_TEX
         #pragma multi_compile _ _USE_EYE_TEX
+        #pragma multi_compile _ _USE_FFT_AMPLITUDE
 
         #include "./Eye.cginc"
 
@@ -180,13 +181,16 @@ Shader "GPUQuads/GPUQuads"
             c += outline*_OutlineIntensity;
             e += outline*_OutlineIntensity;
 
+            #if _USE_FFT_AMPLITUDE
             o.Albedo = c.rgb * (fixed4)IN.amplitude;
             o.Emission = _EmissionColor * e * (fixed4)IN.amplitude;
             o.Alpha = c.a * (fixed4)IN.amplitude;
+            #else
+            o.Albedo = c.rgb;
+            o.Emission = _EmissionColor * e;
+            o.Alpha = c.a;
+            #endif
 
-            // o.Albedo = c.rgb;
-            // o.Emission = _EmissionColor * e;
-            // o.Alpha = c.a;
         }
         ENDCG
     }

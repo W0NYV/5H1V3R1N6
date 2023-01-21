@@ -14,7 +14,9 @@ namespace W0NYV.Shivering.GPUQuads
 
         private uint[] args = new uint[5] { 0, 0, 0, 0, 0 };
 
-        ComputeBuffer argsBuffer;
+        private ComputeBuffer argsBuffer;
+
+        private bool isFFTEmissionMode = false;
 
         private void RenderInstancedMesh()
         {
@@ -71,6 +73,23 @@ namespace W0NYV.Shivering.GPUQuads
             {
                 _instanceRenderMaterial.DisableKeyword("_USE_EYE_TEX");
                 _instanceRenderMaterial.DisableKeyword("_USE_TEXT_TEX");
+            }
+        }
+
+        public void ReverseFFTEmission(float v)
+        {
+            if(v == 1.0)
+            {
+                isFFTEmissionMode = !isFFTEmissionMode;
+                
+                if(isFFTEmissionMode)
+                {
+                    _instanceRenderMaterial.EnableKeyword("_USE_FFT_AMPLITUDE");
+                }
+                else
+                {
+                    _instanceRenderMaterial.DisableKeyword("_USE_FFT_AMPLITUDE");
+                }
             }
         }
 
