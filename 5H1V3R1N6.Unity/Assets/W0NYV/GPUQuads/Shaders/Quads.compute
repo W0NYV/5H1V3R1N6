@@ -7,6 +7,7 @@
 #include "./Line.cginc"
 #include "./Tile.cginc"
 #include "./Sphere.cginc"
+#include "./TiledBox.cginc"
 
 struct QuadData
 {
@@ -42,10 +43,11 @@ void TransformCS(uint3 DTid : SV_DispatchThreadID, uint3 Gid : SV_GroupID, uint3
     float3x3 lineMatrix = lineMat(DT_ID, _QuadCount, _Time);
     float3x3 tileMatrix = tileMat(DT_ID, _QuadCount, _Time);
     float3x3 sphereMatrix = sphereMat(DT_ID, _QuadCount, _Time);
+    float3x3 tiledBoxMatrix = tiledBoxMat(DT_ID);
 
     float3x3 matArr[5];
     matArr[0] = oneBoxMatrix;
-    matArr[1] = loopBoxMatrix;
+    matArr[1] = tiledBoxMatrix;
     matArr[2] = lineMatrix;
     matArr[3] = tileMatrix;
     matArr[4] = sphereMatrix;

@@ -21,7 +21,7 @@ namespace W0NYV.Shivering.CameraWork
 
         public void ChangeAimDistance(float v)
         {
-            float value = v*27f + 3f;
+            float value = v*7f + 3f;
             _aimDistance = value;
         }
 
