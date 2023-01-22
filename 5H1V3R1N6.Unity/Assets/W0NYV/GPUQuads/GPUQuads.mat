@@ -9,7 +9,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: GPUQuads
   m_Shader: {fileID: 4800000, guid: b4cdcaa10b296bf489c6d1e1be4e40f6, type: 3}
-  m_ValidKeywords: []
+  m_ValidKeywords:
+  - _USE_TEXT_TEX
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -39,7 +40,7 @@ Material:
     - _InsideIntensity: 0
     - _Metallic: 0
     - _OutlineIntensity: 0
-    - _OutlineWidth: 0.01
+    - _OutlineWidth: 0.003
     - _TexArrayIndex: 0
     - _UseEyeTex: 0
     - _UseFFTAmplitude: 0

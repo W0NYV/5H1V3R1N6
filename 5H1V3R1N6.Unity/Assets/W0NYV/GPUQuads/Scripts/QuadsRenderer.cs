@@ -44,6 +44,12 @@ namespace W0NYV.Shivering.GPUQuads
             _instanceRenderMaterial.SetFloat("_OutlineIntensity", v);
         }
 
+        public void ChangeOutlineWidth(float v)
+        {
+            float value = v * 0.007f + 0.003f;
+            _instanceRenderMaterial.SetFloat("_OutlineWidth", value);
+        }
+
         public void SetInsideIntensity(float v)
         {
             _instanceRenderMaterial.SetFloat("_InsideIntensity", v);
