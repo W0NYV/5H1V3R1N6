@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1838415235543462872}
   - component: {fileID: 1838415235543462695}
   - component: {fileID: 1838415235543462694}
+  - component: {fileID: 1838415236787710298}
   m_Layer: 0
   m_Name: Lasp
   m_TagString: Untagged
@@ -46,11 +47,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _useDefaultDevice: 0
-  _deviceID: '{0.0.1.00000000}.{c2fbe857-a396-4fab-a585-ab33b2e3dbf0}'
+  _deviceID: '{0.0.1.00000000}.{79c888e3-27df-413f-b735-11376842918b}'
   _channel: 0
   _resolution: 128
-  _autoGain: 1
-  _gain: 0
+  _autoGain: 0
+  _gain: 32
   _dynamicRange: 20
 --- !u!114 &1838415235543462694
 MonoBehaviour:
@@ -67,3 +68,39 @@ MonoBehaviour:
   _logScale: 1
   _renderTexture: {fileID: 8400000, guid: 2bca8d3c73bdce04dad83ec6e5a0b610, type: 2}
   _overrideList: []
+--- !u!114 &1838415236787710298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1838415235543462693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74c3e183ec27ba64d83e010bf18edb92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _useDefaultDevice: 0
+  _deviceID: '{0.0.1.00000000}.{79c888e3-27df-413f-b735-11376842918b}'
+  _channel: 0
+  _filterType: 1
+  _autoGain: 0
+  _gain: 17
+  _dynamicRange: 20
+  _smoothFall: 1
+  _fallSpeed: 0.3
+  _propertyBinders:
+  - rid: 2433983904956022784
+  references:
+    version: 2
+    RefIds:
+    - rid: 2433983904956022784
+      type: {class: FloatPropertyBinder, ns: Lasp, asm: Lasp.Runtime}
+      data:
+        Enabled: 1
+        Target: {fileID: 0}
+        PropertyName: 
+        _propertyType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        Value0: 0
+        Value1: 1

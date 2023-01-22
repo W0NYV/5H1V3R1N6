@@ -10,6 +10,7 @@ Material:
   m_Name: GPUQuads
   m_Shader: {fileID: 4800000, guid: b4cdcaa10b296bf489c6d1e1be4e40f6, type: 3}
   m_ValidKeywords:
+  - _USE_FFT_AMPLITUDE
   - _USE_TEXT_TEX
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -39,7 +40,7 @@ Material:
     - _Glossiness: 0.5
     - _InsideIntensity: 0
     - _Metallic: 0
-    - _OutlineIntensity: 1
+    - _OutlineIntensity: 0
     - _OutlineWidth: 0.003
     - _TexArrayIndex: 0
     - _UseEyeTex: 0

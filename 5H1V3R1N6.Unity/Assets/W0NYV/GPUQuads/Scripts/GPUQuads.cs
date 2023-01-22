@@ -59,11 +59,11 @@ namespace W0NYV.Shivering.GPUQuads
         float accelerateTime = 0f;
         #endregion
 
-        private float test = 0f;
-        public float Test
+        private float _scaleX = 0f;
+        public float ScaleX
         {
-            get => test;
-            set => test = value;
+            get => _scaleX;
+            set => _scaleX = value;
         }
 
         public void ChangeMode(int modeNum)
@@ -130,7 +130,7 @@ namespace W0NYV.Shivering.GPUQuads
             cs.SetFloat("_LerpValue", _lerpValue);
             cs.SetFloat("_Time", Time.time * _timeSpeed - Accelerate());
             
-            // cs.SetFloat("_ScaleX", _scaleX);
+            cs.SetFloat("_ScaleX", _scaleX);
 
             cs.SetBuffer(id, "_QuadDataBufferWrite", _quadDataBuffer);
 
