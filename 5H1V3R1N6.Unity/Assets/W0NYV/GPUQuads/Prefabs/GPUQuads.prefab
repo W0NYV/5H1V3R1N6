@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 2186044896064210825}
   - component: {fileID: 2186044896064210871}
   - component: {fileID: 2186044896064210824}
+  - component: {fileID: 2010696651}
+  - component: {fileID: 2186044896986517145}
   m_Layer: 0
   m_Name: GPUQuads
   m_TagString: Untagged
@@ -46,11 +48,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _maxObjectNum: 128
-  _modeNum: 0
-  _preModeNum: 0
   _quadsCS: {fileID: 7200000, guid: 338c936a05c2c9f448cca685dd004420, type: 3}
+  _modeNum: 5
+  _preModeNum: 0
   _lerpValue: 1
   _lerpSpeed: 0.1
+  _timeSpeed: 1
+  _canAccelerate: 0
 --- !u!114 &2186044896064210824
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -66,3 +70,27 @@ MonoBehaviour:
   _gpuQuads: {fileID: 2186044896064210871}
   _instanceMesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
   _instanceRenderMaterial: {fileID: 2100000, guid: 6c5af8a2bc2488c4abf191ad56e8dd7c, type: 2}
+--- !u!114 &2010696651
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2186044896064210826}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9d0782cd8b0f344f8bb1fdb84d59a84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2186044896986517145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2186044896064210826}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ee3ee996fca29b41b851b9b5ce55e2b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

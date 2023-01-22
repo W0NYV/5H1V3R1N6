@@ -25,6 +25,8 @@ int _PreModeNum;
 float _LerpValue;
 float _Time;
 
+float _ScaleX;
+
 [numthreads(THREAD_SIZE, 1, 1)]
 void TransformCS(uint3 DTid : SV_DispatchThreadID, uint3 Gid : SV_GroupID, uint3 GTid : SV_GroupThreadID, uint GI : SV_GroupIndex)
 {
@@ -44,7 +46,7 @@ void TransformCS(uint3 DTid : SV_DispatchThreadID, uint3 Gid : SV_GroupID, uint3
     float3x3 tileMatrix = tileMat(DT_ID, _QuadCount, _Time);
     float3x3 sphereMatrix = sphereMat(DT_ID, _QuadCount, _Time);
     float3x3 tiledBoxMatrix = tiledBoxMat(DT_ID);
-    float3x3 tunnelMatrix = tunnelMat(DT_ID, 20);
+    float3x3 tunnelMatrix = tunnelMat(DT_ID, 64, _Time, _ScaleX);
 
     float3x3 matArr[6];
     matArr[0] = oneBoxMatrix;

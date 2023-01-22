@@ -3,6 +3,7 @@ Shader "PostEffect/PostEffect"
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
+        _FaceTex ("Texture", 2D) = "white" {}
 
         [Toggle(_BUILD_UP)]_BuildUp("Build up", Float) = 0
     }
@@ -42,6 +43,7 @@ Shader "PostEffect/PostEffect"
             }
 
             sampler2D _MainTex;
+            sampler2D _FaceTex;
 
             float rand(float2 st)
             {
@@ -59,11 +61,16 @@ Shader "PostEffect/PostEffect"
             {
                 fixed4 col = tex2D(_MainTex, i.uv);
 
+                // fixed4 face = tex2D(_FaceTex, i.uv);
+                // face = step(0.1, face);
+                // face = fixed4(face.r+face.g+face.b/3.0, face.r+face.g+face.b/3.0, face.r+face.g+face.b/3.0, face.r+face.g+face.b/3.0);
+                // col += face;
+
                 #if _BUILD_UP
                 fixed4 c = lerp(fixed4(0.4, 0.0, 1.0, 1.0), fixed4(0.7, 1.0, 0.0, 1.0), (sin(_Time.y*80.0)+1.0)*0.5);
                 col = lerp(col, (1.0-col)*c, (sin(_Time.y*40.0)+1.0)*0.5);
                 #endif
-
+                
                 col.rgb *= 1.0 - grain(i.uv, 128.0);
 
                 return col;

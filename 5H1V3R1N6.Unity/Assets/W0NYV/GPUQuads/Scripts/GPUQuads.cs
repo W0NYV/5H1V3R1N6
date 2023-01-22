@@ -8,7 +8,7 @@ namespace W0NYV.Shivering.GPUQuads
 
     public class GPUQuads : MonoBehaviour
     {
-
+        #region 必須
         [System.Serializable] struct QuadData
         {
             public Vector3 position;
@@ -24,9 +24,6 @@ namespace W0NYV.Shivering.GPUQuads
             get => _maxObjectNum;
         }
 
-        [SerializeField] private int _modeNum = 0;
-        [SerializeField] private int _preModeNum = 0;
-
         [SerializeField] private ComputeShader _quadsCS;
 
         private ComputeBuffer _quadDataBuffer;
@@ -34,33 +31,42 @@ namespace W0NYV.Shivering.GPUQuads
         {
             get => _quadDataBuffer;
         }
-
+        #endregion
+        
+        #region ChangeMode
+        [SerializeField] private int _modeNum = 0;
+        [SerializeField] private int _preModeNum = 0;
         [SerializeField] private float _lerpValue = 1f;
         [SerializeField] private float _lerpSpeed = 1f;
+        #endregion
+
+        #region BuildUp
         [SerializeField] private float _timeSpeed = 1f;
-        
-        [SerializeField] private bool canAccelerate = false;
-        float accelerateTime = 0f;
-
-        private void InitBuffer()
+        public float TimeSpeed
         {
-            _quadDataBuffer = new ComputeBuffer(_maxObjectNum, Marshal.SizeOf(typeof(QuadData)));
+            get => _timeSpeed;
+            set => _timeSpeed = value;
+        }
+        #endregion
 
-            var quadDataArr = new QuadData[_maxObjectNum];
-            for(int i = 0; i < _maxObjectNum; i++)
-            {
-                quadDataArr[i].position = Vector3.zero;
-                quadDataArr[i].rotation = Vector3.zero;
-                quadDataArr[i].scale = new Vector3(1f, 1f, 1f);
-                quadDataArr[i].index = 0f;
-            }
+        #region 加速
+        [SerializeField] private bool _canAccelerate = false;
+        public bool CanAccelerate
+        {
+            get => _canAccelerate;
+            set => _canAccelerate = value;
+        }
+        float accelerateTime = 0f;
+        #endregion
 
-            _quadDataBuffer.SetData(quadDataArr);
-
-            quadDataArr = null;
+        private float test = 0f;
+        public float Test
+        {
+            get => test;
+            set => test = value;
         }
 
-        private void ChangeMode(int modeNum)
+        public void ChangeMode(int modeNum)
         {
             _modeNum = modeNum;
             _lerpValue = 0f;
@@ -73,7 +79,7 @@ namespace W0NYV.Shivering.GPUQuads
 
         private float Accelerate()
         {
-            if(canAccelerate)
+            if(_canAccelerate)
             {
                 accelerateTime += Time.deltaTime * 3.0f;
 
@@ -81,7 +87,7 @@ namespace W0NYV.Shivering.GPUQuads
 
                 if(1f <= accelerateTime)
                 {
-                    canAccelerate = false;
+                    _canAccelerate = false;
                 }
 
                 return t;
@@ -123,10 +129,32 @@ namespace W0NYV.Shivering.GPUQuads
             cs.SetInt("_PreModeNum", _preModeNum);
             cs.SetFloat("_LerpValue", _lerpValue);
             cs.SetFloat("_Time", Time.time * _timeSpeed - Accelerate());
+            
+            // cs.SetFloat("_ScaleX", _scaleX);
 
             cs.SetBuffer(id, "_QuadDataBufferWrite", _quadDataBuffer);
 
             cs.Dispatch(id, threadGroupSize, 1, 1);
+        }
+
+        #region Buffer関連
+
+        private void InitBuffer()
+        {
+            _quadDataBuffer = new ComputeBuffer(_maxObjectNum, Marshal.SizeOf(typeof(QuadData)));
+
+            var quadDataArr = new QuadData[_maxObjectNum];
+            for(int i = 0; i < _maxObjectNum; i++)
+            {
+                quadDataArr[i].position = Vector3.zero;
+                quadDataArr[i].rotation = Vector3.zero;
+                quadDataArr[i].scale = new Vector3(1f, 1f, 1f);
+                quadDataArr[i].index = 0f;
+            }
+
+            _quadDataBuffer.SetData(quadDataArr);
+
+            quadDataArr = null;
         }
 
         private void ReleaseBuffer()
@@ -136,58 +164,6 @@ namespace W0NYV.Shivering.GPUQuads
                 _quadDataBuffer.Release();
                 _quadDataBuffer = null;
             }
-        }
-
-        #region public Methods
-
-        public void ChangeOneBoxMode(float v)
-        {
-            if(v == 1.0)
-            {
-                ChangeMode(0);
-            }
-        }
-
-        public void ChangeLoopBoxMode(float v)
-        {
-            if(v == 1.0)
-            {
-                ChangeMode(1);
-            }
-        }
-
-        public void ChangeLineMode(float v)
-        {
-            if(v == 1.0)
-            {
-                ChangeMode(2);
-            }
-        }
-
-        public void ChangeTileMode(float v)
-        {
-            if(v == 1.0)
-            {
-                ChangeMode(3);
-            }
-        }
-
-        public void ChangeSphereMode(float v)
-        {
-            if(v == 1.0)
-            {
-                ChangeMode(4);
-            }
-        }
-
-        public void BuildUp(float v)
-        {
-            _timeSpeed = 1.0f + 19.0f*v;
-        }
-
-        public void DoAccelerate(float v)
-        {
-            canAccelerate = true;
         }
 
         #endregion

@@ -11,12 +11,22 @@ namespace W0NYV.Shivering.GPUQuads
         [SerializeField] private GPUQuads _gpuQuads;
         [SerializeField] private Mesh _instanceMesh;
         [SerializeField] private Material _instanceRenderMaterial;
+        public Material InstanceRenderMaterial
+        {
+            get => _instanceRenderMaterial;
+            set => _instanceRenderMaterial = value;
+        }
 
         private uint[] args = new uint[5] { 0, 0, 0, 0, 0 };
 
         private ComputeBuffer argsBuffer;
 
-        private bool isFFTEmissionMode = false;
+        private bool _isFFTEmissionMode = false;
+        public bool IsFFTEmissionMode
+        {
+            get => _isFFTEmissionMode;
+            set => _isFFTEmissionMode = value;
+        }
 
         private void RenderInstancedMesh()
         {
@@ -36,70 +46,6 @@ namespace W0NYV.Shivering.GPUQuads
 
             Graphics.DrawMeshInstancedIndirect(_instanceMesh, 0, _instanceRenderMaterial, bounds, argsBuffer);
         }
-
-        #region public Methods
-
-        public void SetOutlineIntensity(float v)
-        {
-            _instanceRenderMaterial.SetFloat("_OutlineIntensity", v);
-        }
-
-        public void ChangeOutlineWidth(float v)
-        {
-            float value = v * 0.007f + 0.003f;
-            _instanceRenderMaterial.SetFloat("_OutlineWidth", value);
-        }
-
-        public void SetInsideIntensity(float v)
-        {
-            _instanceRenderMaterial.SetFloat("_InsideIntensity", v);
-        }
-
-        public void ChangeToTextTex(float v)
-        {
-            if(v == 1.0)
-            {
-                _instanceRenderMaterial.EnableKeyword("_USE_TEXT_TEX");
-                _instanceRenderMaterial.DisableKeyword("_USE_EYE_TEX");
-            }
-        }
-
-        public void ChangeToEyeTex(float v)
-        {
-            if(v == 1.0)
-            {
-                _instanceRenderMaterial.EnableKeyword("_USE_EYE_TEX");
-                _instanceRenderMaterial.DisableKeyword("_USE_TEXT_TEX");
-            }
-        }
-
-        public void ChangeToFFTTex(float v)
-        {
-            if(v == 1.0)
-            {
-                _instanceRenderMaterial.DisableKeyword("_USE_EYE_TEX");
-                _instanceRenderMaterial.DisableKeyword("_USE_TEXT_TEX");
-            }
-        }
-
-        public void ReverseFFTEmission(float v)
-        {
-            if(v == 1.0)
-            {
-                isFFTEmissionMode = !isFFTEmissionMode;
-                
-                if(isFFTEmissionMode)
-                {
-                    _instanceRenderMaterial.EnableKeyword("_USE_FFT_AMPLITUDE");
-                }
-                else
-                {
-                    _instanceRenderMaterial.DisableKeyword("_USE_FFT_AMPLITUDE");
-                }
-            }
-        }
-
-        #endregion
 
         #region MonoBehaviour Methods
 
