@@ -54,6 +54,14 @@ namespace W0NYV.Shivering.GPUQuads
             }
         }
 
+        public void ChangeTunnelMode(float v)
+        {
+            if(v == 1.0)
+            {
+                _gpuQuads.ChangeMode(5);
+            }
+        }
+
         #endregion
     
         public void BuildUp(float v)
