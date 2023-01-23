@@ -59,7 +59,7 @@ namespace W0NYV.Shivering.GPUQuads
         float accelerateTime = 0f;
         #endregion
 
-        private float _scaleX = 0f;
+        private float _scaleX = 1f;
         public float ScaleX
         {
             get => _scaleX;
