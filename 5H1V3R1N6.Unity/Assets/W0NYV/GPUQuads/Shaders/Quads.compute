@@ -40,7 +40,7 @@ void TransformCS(uint3 DTid : SV_DispatchThreadID, uint3 Gid : SV_GroupID, uint3
 
     float3x3 dstMatrix = (float3x3)0;
 
-    float3x3 oneBoxMatrix = oneBox(GT_ID);
+    float3x3 oneBoxMatrix = oneBox(GT_ID, DT_ID);
     // float3x3 loopBoxMatrix = loopBox(GT_ID, G_ID, 1.0);
     float3x3 lineMatrix = lineMat(DT_ID, _QuadCount, _Time);
     float3x3 tileMatrix = tileMat(DT_ID, _QuadCount, _Time);

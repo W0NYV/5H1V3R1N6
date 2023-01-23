@@ -1,4 +1,4 @@
-float3x3 oneBox(int gtid)
+float3x3 oneBox(int gtid, int dtid)
 {
     float3 pos;
     float3 rot;
@@ -25,6 +25,11 @@ float3x3 oneBox(int gtid)
         pos = float3(0, 0, -0.5);
         rot = float3(0, 0, 0);
     }
+
+    // if(dtid > 3)
+    // {
+    //     pos = (float3)10000.0;
+    // }
 
     scl = (float3)1.0;
 

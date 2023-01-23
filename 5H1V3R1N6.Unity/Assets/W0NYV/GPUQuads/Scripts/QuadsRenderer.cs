@@ -19,7 +19,8 @@ namespace W0NYV.Shivering.GPUQuads
 
         private uint[] args = new uint[5] { 0, 0, 0, 0, 0 };
 
-        private ComputeBuffer argsBuffer;
+        // private ComputeBuffer argsBuffer;
+        private GraphicsBuffer _g_ArgsBuffer;
 
         private bool _isFFTEmissionMode = false;
         public bool IsFFTEmissionMode
@@ -38,20 +39,22 @@ namespace W0NYV.Shivering.GPUQuads
 
             args[1] = (uint)_gpuQuads.MaxObjectNum;
 
-            argsBuffer.SetData(args);
+            // argsBuffer.SetData(args);
+            _g_ArgsBuffer.SetData(args);
 
             _instanceRenderMaterial.SetBuffer("_QuadDataBuffer", _gpuQuads.QuadDataBuffer);
 
             var bounds = new Bounds(Vector3.zero, new Vector3(128f, 128f, 128f));
 
-            Graphics.DrawMeshInstancedIndirect(_instanceMesh, 0, _instanceRenderMaterial, bounds, argsBuffer);
+            Graphics.DrawMeshInstancedIndirect(_instanceMesh, 0, _instanceRenderMaterial, bounds, _g_ArgsBuffer);
         }
 
         #region MonoBehaviour Methods
 
         private void Start()
         {
-            argsBuffer = new ComputeBuffer(1, args.Length * sizeof(uint), ComputeBufferType.IndirectArguments);
+            // argsBuffer = new ComputeBuffer(1, args.Length * sizeof(uint), ComputeBufferType.IndirectArguments);
+            _g_ArgsBuffer = new GraphicsBuffer(GraphicsBuffer.Target.IndirectArguments, 1, args.Length * sizeof(uint));
         }
 
         private void Update()
@@ -60,8 +63,8 @@ namespace W0NYV.Shivering.GPUQuads
         }
 
         private void OnDisable() {
-            if(argsBuffer != null) argsBuffer.Release();
-            argsBuffer = null;
+            if(_g_ArgsBuffer != null) _g_ArgsBuffer.Release();
+            _g_ArgsBuffer = null;
         }
 
         #endregion
