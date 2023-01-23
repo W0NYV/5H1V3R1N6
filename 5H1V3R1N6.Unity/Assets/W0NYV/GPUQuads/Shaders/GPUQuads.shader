@@ -144,7 +144,7 @@ Shader "GPUQuads/GPUQuads"
             o.index8 = floor(_QuadDataBuffer[unity_InstanceID].index/16.0);
             o.index16 = floor(fmod(_QuadDataBuffer[unity_InstanceID].index, 16.0));
 
-            o.amplitude = frac(tex2Dlod(_MainTex, float4(_QuadDataBuffer[unity_InstanceID].index/128.0, 0.0, 0.0, 0.0)).r);
+            o.amplitude = tex2Dlod(_MainTex, float4(_QuadDataBuffer[unity_InstanceID].index/128.0, 0.0, 0.0, 0.0)).r;
 
             #endif
         }
@@ -167,12 +167,12 @@ Shader "GPUQuads/GPUQuads"
             c.g = c.r;
             c.b = c.r;
             c.a = c.r;
-            e = c;
+            e = c * 3.0;
 
             float2 uv2 = uv;
             uv2.x = uv2.x/16.0 + (1.0/16.0*IN.index16);
             uv2.y = uv2.y/8.0 + (1.0/8.0*IN.index8);
-
+            uv2 = frac(uv2*5.0+_Time.y/3.0);
             c = tex2D(_SingleModeTex, uv2);
             e = c;
 
