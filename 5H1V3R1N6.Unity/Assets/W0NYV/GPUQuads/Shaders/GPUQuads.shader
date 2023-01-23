@@ -15,6 +15,9 @@ Shader "GPUQuads/GPUQuads"
         _TexArray ("Texture Array", 2DArray) = "" {}
         _TexArrayIndex ("Texture Array Index", float) = 0.0
 
+        //SingleTexMode
+        _SingleModeTex ("Single Mode Texture", 2D) = "white" {}
+
         [Toggle(_USE_TEXT_TEX)]_UseTextTex("Use TextTex", Float) = 0
         [Toggle(_USE_EYE_TEX)]_UseEyeTex("Use EyeTex", Float) = 0
         [Toggle(_USE_FFT_AMPLITUDE)]_UseFFTAmplitude("Use FFT Amplitude", Float) = 0
@@ -30,6 +33,7 @@ Shader "GPUQuads/GPUQuads"
         #pragma surface surf Standard vertex:vert alphatest:_Cutoff
         #pragma instancing_options procedural:setup
         #pragma require 2darray
+        #pragma target 4.0
 
         #pragma multi_compile _ _USE_TEXT_TEX
         #pragma multi_compile _ _USE_EYE_TEX
@@ -40,7 +44,10 @@ Shader "GPUQuads/GPUQuads"
         struct Input
         {
             float2 uv_MainTex;
-            float texIndex;
+            float index;
+            float index4;
+            float index8;
+            float index16;
             float amplitude;
         };
 
@@ -66,6 +73,8 @@ Shader "GPUQuads/GPUQuads"
 
         float _OutlineIntensity;
         float _OutlineWidth;
+
+        sampler2D _SingleModeTex;
 
         float4x4 eulerAnglesToRotationMatrix(float3 angles)
         {
@@ -130,9 +139,12 @@ Shader "GPUQuads/GPUQuads"
 
             v.normal = normalize(mul(object2world, v.vertex));
 
-            o.texIndex = floor(fmod(_QuadDataBuffer[unity_InstanceID].index, 4.0));
+            o.index = _QuadDataBuffer[unity_InstanceID].index;
+            o.index4 = floor(fmod(_QuadDataBuffer[unity_InstanceID].index, 4.0));
+            o.index8 = floor(_QuadDataBuffer[unity_InstanceID].index/16.0);
+            o.index16 = floor(fmod(_QuadDataBuffer[unity_InstanceID].index, 16.0));
 
-            o.amplitude = tex2Dlod(_MainTex, float4(_QuadDataBuffer[unity_InstanceID].index/128.0, 0.0, 0.0, 0.0)).r;
+            o.amplitude = frac(tex2Dlod(_MainTex, float4(_QuadDataBuffer[unity_InstanceID].index/128.0, 0.0, 0.0, 0.0)).r);
 
             #endif
         }
@@ -157,13 +169,20 @@ Shader "GPUQuads/GPUQuads"
             c.a = c.r;
             e = c;
 
+            float2 uv2 = uv;
+            uv2.x = uv2.x/16.0 + (1.0/16.0*IN.index16);
+            uv2.y = uv2.y/8.0 + (1.0/8.0*IN.index8);
+
+            c = tex2D(_SingleModeTex, uv2);
+            e = c;
+
             #if _USE_EYE_TEX
-            c = eye(uv, _Time.y, IN.texIndex);
+            c = eye(uv, _Time.y, IN.index4);
             e = c;
             #endif
 
             #if _USE_TEXT_TEX
-            c = UNITY_SAMPLE_TEX2DARRAY(_TexArray, float3(uv, floor(fmod(_Time.y*2.0+IN.texIndex, 4.0))));
+            c = UNITY_SAMPLE_TEX2DARRAY(_TexArray, float3(uv, floor(fmod(_Time.y*2.0+IN.index4, 4.0))));
             e = c;
             #endif
 

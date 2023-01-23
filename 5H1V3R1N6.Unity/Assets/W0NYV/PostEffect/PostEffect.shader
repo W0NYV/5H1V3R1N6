@@ -71,7 +71,7 @@ Shader "PostEffect/PostEffect"
                 col = lerp(col, (1.0-col)*c, (sin(_Time.y*40.0)+1.0)*0.5);
                 #endif
                 
-                col.rgb *= 1.0 - grain(i.uv, 128.0);
+                col.rgb *= 1.0 - grain(i.uv, 64.0);
 
                 return col;
             }
