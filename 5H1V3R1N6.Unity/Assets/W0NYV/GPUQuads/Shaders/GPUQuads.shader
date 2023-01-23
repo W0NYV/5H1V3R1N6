@@ -167,12 +167,12 @@ Shader "GPUQuads/GPUQuads"
             c.g = c.r;
             c.b = c.r;
             c.a = c.r;
-            e = c * 3.0;
+            e = c;
 
             float2 uv2 = uv;
             uv2.x = uv2.x/16.0 + (1.0/16.0*IN.index16);
             uv2.y = uv2.y/8.0 + (1.0/8.0*IN.index8);
-            uv2 = frac(uv2*5.0+_Time.y/3.0);
+            uv2 = frac(uv2*5.0+_Time.y/5.0);
             c = tex2D(_SingleModeTex, uv2);
             e = c;
 
