@@ -14,53 +14,14 @@ namespace W0NYV.Shivering.GPUQuads
         }
 
         #region ChangeMode
-        public void ChangeOneBoxMode(float v)
-        {
-            if(v == 1.0)
-            {
-                _gpuQuads.ChangeMode(0);
-            }
-        }
 
-        public void ChangeTiledBoxMode(float v)
-        {
-            if(v == 1.0)
-            {
-                _gpuQuads.ChangeMode(1);
-            }
-        }
-
-        public void ChangeLineMode(float v)
-        {
-            if(v == 1.0)
-            {
-                _gpuQuads.ChangeMode(2);
-            }
-        }
-
-        public void ChangeTileMode(float v)
-        {
-            if(v == 1.0)
-            {
-                _gpuQuads.ChangeMode(3);
-            }
-        }
-
-        public void ChangeSphereMode(float v)
-        {
-            if(v == 1.0)
-            {
-                _gpuQuads.ChangeMode(4);
-            }
-        }
-
-        public void ChangeTunnelMode(float v)
-        {
-            if(v == 1.0)
-            {
-                _gpuQuads.ChangeMode(5);
-            }
-        }
+        public void ChangeOneBoxMode(float v){if(v == 1.0) _gpuQuads.ChangeMode(0);}
+        public void ChangeTiledBoxMode(float v){if(v == 1.0) _gpuQuads.ChangeMode(1);}
+        public void ChangeLineMode(float v){if(v == 1.0) _gpuQuads.ChangeMode(2);}
+        public void ChangeTileMode(float v){if(v == 1.0) _gpuQuads.ChangeMode(3);}
+        public void ChangeSphereMode(float v){if(v == 1.0) _gpuQuads.ChangeMode(4);}
+        public void ChangeTunnelMode(float v){if(v == 1.0) _gpuQuads.ChangeMode(5);}
+        public void ChangeLissajousMode(float v){if(v == 1.0) _gpuQuads.ChangeMode(6);}
 
         #endregion
     

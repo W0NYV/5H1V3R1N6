@@ -8,6 +8,7 @@
 #include "./cginc/Sphere.cginc"
 #include "./cginc/TiledBox.cginc"
 #include "./cginc/Tunnel.cginc"
+#include "./cginc/Lissajous.cginc"
 
 struct QuadData
 {
@@ -46,14 +47,16 @@ void TransformCS(uint3 DTid : SV_DispatchThreadID, uint3 Gid : SV_GroupID, uint3
     float3x3 sphereMatrix = sphereMat(DT_ID, _QuadCount, _Time);
     float3x3 tiledBoxMatrix = tiledBoxMat(DT_ID);
     float3x3 tunnelMatrix = tunnelMat(DT_ID, 64, _Time, _ScaleX);
+    float3x3 lissajousMatrix = lissajousMat(DT_ID, _QuadCount, _Time);
 
-    float3x3 matArr[6];
+    float3x3 matArr[7];
     matArr[0] = oneBoxMatrix;
     matArr[1] = tiledBoxMatrix;
     matArr[2] = lineMatrix;
     matArr[3] = tileMatrix;
     matArr[4] = sphereMatrix;
     matArr[5] = tunnelMatrix;
+    matArr[6] = lissajousMatrix;
 
     if(_PreModeNum == _ModeNum)
     {

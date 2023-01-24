@@ -22,6 +22,7 @@ Shader "GPUQuads/GPUQuads"
         [Toggle(_USE_EYE_TEX)]_UseEyeTex("Use EyeTex", Float) = 0
         [Toggle(_USE_FFT_TEX)]_UseFFTTex("Use FFTTex", Float) = 0
         [Toggle(_USE_SINGLE_TEX)]_UseSingleTex("Use SingleTex", Float) = 0
+        [Toggle(_USE_VCOL_TEX)]_UseVColTex("Use VColTex", Float) = 0
 
         [Toggle(_USE_FFT_AMPLITUDE)]_UseFFTAmplitude("Use FFT Amplitude", Float) = 0
     }
