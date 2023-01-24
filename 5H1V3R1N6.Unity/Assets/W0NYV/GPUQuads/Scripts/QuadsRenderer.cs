@@ -11,11 +11,14 @@ namespace W0NYV.Shivering.GPUQuads
         [SerializeField] private GPUQuads _gpuQuads;
         [SerializeField] private Mesh _instanceMesh;
         [SerializeField] private Material _instanceRenderMaterial;
-        public Material InstanceRenderMaterial
-        {
-            get => _instanceRenderMaterial;
-            set => _instanceRenderMaterial = value;
-        }
+        public Material InstanceRenderMaterial { get => _instanceRenderMaterial; }
+
+        private string[] _shaderKeywords = {
+            "_USE_TEXT_TEX",
+            "_USE_EYE_TEX",
+            "_USE_FFT_TEX",
+            "_USE_SINGLE_TEX",
+        };
 
         private uint[] args = new uint[5] { 0, 0, 0, 0, 0 };
 
@@ -27,6 +30,18 @@ namespace W0NYV.Shivering.GPUQuads
         {
             get => _isFFTEmissionMode;
             set => _isFFTEmissionMode = value;
+        }
+
+        public void SwitchTex(int index)
+        {
+            _instanceRenderMaterial.EnableKeyword(_shaderKeywords[index]);
+
+            int i = 0;
+            foreach (string keyword in _shaderKeywords)
+            {   
+                if(i != index) _instanceRenderMaterial.DisableKeyword(keyword);
+                i++;
+            }
         }
 
         private void RenderInstancedMesh()
