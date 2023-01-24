@@ -48,6 +48,7 @@ Shader "GPUQuads/GPUQuads"
         #include "./Outline.cginc"
         #include "./Eye.cginc"
         #include "./EulerAnglesToRotationMatrix.cginc"
+        #include "./HSV2RGB.cginc"
 
         struct Input
         {
@@ -57,6 +58,8 @@ Shader "GPUQuads/GPUQuads"
             float index8;
             float index16;
             float amplitude;
+
+            fixed4 vColor;
         };
 
         struct QuadData
@@ -64,7 +67,6 @@ Shader "GPUQuads/GPUQuads"
             float3 position;
             float3 rotation;
             float3 scale;
-            float index;
         };
 
         #ifdef UNITY_PROCEDURAL_INSTANCING_ENABLED
@@ -93,6 +95,7 @@ Shader "GPUQuads/GPUQuads"
             float3 pos = _QuadDataBuffer[unity_InstanceID].position;
             float3 rot = _QuadDataBuffer[unity_InstanceID].rotation;
             float3 scl = _QuadDataBuffer[unity_InstanceID].scale;
+            float index = (float)unity_InstanceID;
 
             float4x4 rotMatrix = eulerAnglesToRotationMatrix(rot);
 
@@ -104,16 +107,18 @@ Shader "GPUQuads/GPUQuads"
 
             object2world._14_24_34 += pos.xyz;
 
+            o.vColor = hsv2rgb(frac(sin((v.vertex.r+v.vertex.g+v.vertex.b+index)*10000.0)), 1.0, 1.0);
+
             v.vertex = mul(object2world, v.vertex);
 
             v.normal = normalize(mul(object2world, v.vertex));
 
-            o.index = _QuadDataBuffer[unity_InstanceID].index;
-            o.index4 = floor(fmod(_QuadDataBuffer[unity_InstanceID].index, 4.0));
-            o.index8 = floor(_QuadDataBuffer[unity_InstanceID].index/16.0);
-            o.index16 = floor(fmod(_QuadDataBuffer[unity_InstanceID].index, 16.0));
+            o.index = index;
+            o.index4 = floor(fmod(index, 4.0));
+            o.index8 = floor(index/16.0);
+            o.index16 = floor(fmod(index, 16.0));
 
-            o.amplitude = tex2Dlod(_MainTex, float4(_QuadDataBuffer[unity_InstanceID].index/128.0, 0.0, 0.0, 0.0)).r;
+            o.amplitude = tex2Dlod(_MainTex, float4(index/128.0, 0.0, 0.0, 0.0)).r;
 
             #endif
         }
@@ -125,7 +130,11 @@ Shader "GPUQuads/GPUQuads"
             float2 uv = IN.uv_MainTex;
 
             fixed4 c = (fixed4)0;
-            fixed4 e = (fixed4)0;
+            
+            // float h = frac(sin(IN.index*10000.0));
+            // float s = 1.0;
+            // float v = 1.0;
+            c = IN.vColor;
 
             #if _USE_FFT_TEX
                 float2 fl = uv;
@@ -145,7 +154,7 @@ Shader "GPUQuads/GPUQuads"
                 c = UNITY_SAMPLE_TEX2DARRAY(_TexArray, float3(uv, floor(fmod(_Time.y*2.0+IN.index4, 4.0))));
             #endif
 
-            e = c;
+            fixed4 e = c;
 
             c *= _InsideIntensity;
             e *= _InsideIntensity;

@@ -14,7 +14,6 @@ struct QuadData
     float3 position;
     float3 rotation;
     float3 scale;
-    float index;
 };
 
 RWStructuredBuffer<QuadData> _QuadDataBufferWrite;
@@ -72,5 +71,4 @@ void TransformCS(uint3 DTid : SV_DispatchThreadID, uint3 Gid : SV_GroupID, uint3
     _QuadDataBufferWrite[DT_ID].position = pos;
     _QuadDataBufferWrite[DT_ID].rotation = rot;
     _QuadDataBufferWrite[DT_ID].scale = scl;
-    _QuadDataBufferWrite[DT_ID].index = (float)DT_ID;
 }
