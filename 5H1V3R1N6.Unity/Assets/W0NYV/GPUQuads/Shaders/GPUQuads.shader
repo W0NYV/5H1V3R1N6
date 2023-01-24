@@ -46,11 +46,11 @@ Shader "GPUQuads/GPUQuads"
 
         #pragma multi_compile _ _USE_FFT_AMPLITUDE
 
-        #include "./Outline.cginc"
-        #include "./Eye.cginc"
-        #include "./EulerAnglesToRotationMatrix.cginc"
-        #include "./HSV2RGB.cginc"
-        #include "./Rand.cginc"
+        #include "./cginc/Outline.cginc"
+        #include "./cginc/Eye.cginc"
+        #include "./cginc/EulerAnglesToRotationMatrix.cginc"
+        #include "./cginc/HSV2RGB.cginc"
+        #include "./cginc/Rand.cginc"
 
         struct Input
         {

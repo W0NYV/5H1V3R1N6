@@ -2,12 +2,12 @@
 
 #define THREAD_SIZE 4
 
-#include "./OneBox.cginc"
-#include "./Line.cginc"
-#include "./Tile.cginc"
-#include "./Sphere.cginc"
-#include "./TiledBox.cginc"
-#include "./Tunnel.cginc"
+#include "./cginc/OneBox.cginc"
+#include "./cginc/Line.cginc"
+#include "./cginc/Tile.cginc"
+#include "./cginc/Sphere.cginc"
+#include "./cginc/TiledBox.cginc"
+#include "./cginc/Tunnel.cginc"
 
 struct QuadData
 {
