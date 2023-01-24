@@ -42,6 +42,7 @@ Shader "GPUQuads/GPUQuads"
         #pragma multi_compile _ _USE_EYE_TEX
         #pragma multi_compile _ _USE_SINGLE_TEX
         #pragma multi_compile _ _USE_FFT_TEX
+        #pragma multi_compile _ _USE_VCOL_TEX
 
         #pragma multi_compile _ _USE_FFT_AMPLITUDE
 
@@ -49,6 +50,7 @@ Shader "GPUQuads/GPUQuads"
         #include "./Eye.cginc"
         #include "./EulerAnglesToRotationMatrix.cginc"
         #include "./HSV2RGB.cginc"
+        #include "./Rand.cginc"
 
         struct Input
         {
@@ -107,7 +109,9 @@ Shader "GPUQuads/GPUQuads"
 
             object2world._14_24_34 += pos.xyz;
 
-            o.vColor = hsv2rgb(frac(sin((v.vertex.r+v.vertex.g+v.vertex.b+index)*10000.0)), 1.0, 1.0);
+            //要相談
+            o.vColor = hsv2rgb(frac(sin((rand3(v.vertex)+index)*10000.0)), 1.0, 1.0);
+            //o.vColor = fixed4((fixed3)frac(sin((rand3(v.vertex)+index)*10000.0)), 1.0);
 
             v.vertex = mul(object2world, v.vertex);
 
@@ -130,12 +134,7 @@ Shader "GPUQuads/GPUQuads"
             float2 uv = IN.uv_MainTex;
 
             fixed4 c = (fixed4)0;
-            
-            // float h = frac(sin(IN.index*10000.0));
-            // float s = 1.0;
-            // float v = 1.0;
-            c = IN.vColor;
-
+        
             #if _USE_FFT_TEX
                 float2 fl = uv;
                 fl.y = floor(frac(IN.uv_MainTex.y+_Time.y*0.1) * 8.0);
@@ -152,6 +151,8 @@ Shader "GPUQuads/GPUQuads"
                 c = eye(uv, _Time.y, IN.index4);
             #elif _USE_TEXT_TEX
                 c = UNITY_SAMPLE_TEX2DARRAY(_TexArray, float3(uv, floor(fmod(_Time.y*2.0+IN.index4, 4.0))));
+            #elif _USE_VCOL_TEX
+                c = IN.vColor;
             #endif
 
             fixed4 e = c;
