@@ -20,6 +20,9 @@ Shader "GPUQuads/GPUQuads"
 
         [Toggle(_USE_TEXT_TEX)]_UseTextTex("Use TextTex", Float) = 0
         [Toggle(_USE_EYE_TEX)]_UseEyeTex("Use EyeTex", Float) = 0
+        [Toggle(_USE_FFT_TEX)]_UseFFTTex("Use FFTTex", Float) = 0
+        [Toggle(_USE_SINGLE_TEX)]_UseSingleTex("Use SingleTex", Float) = 0
+
         [Toggle(_USE_FFT_AMPLITUDE)]_UseFFTAmplitude("Use FFT Amplitude", Float) = 0
     }
     SubShader
@@ -37,9 +40,14 @@ Shader "GPUQuads/GPUQuads"
 
         #pragma multi_compile _ _USE_TEXT_TEX
         #pragma multi_compile _ _USE_EYE_TEX
+        #pragma multi_compile _ _USE_SINGLE_TEX
+        #pragma multi_compile _ _USE_FFT_TEX
+
         #pragma multi_compile _ _USE_FFT_AMPLITUDE
 
+        #include "./Outline.cginc"
         #include "./Eye.cginc"
+        #include "./EulerAnglesToRotationMatrix.cginc"
 
         struct Input
         {
@@ -75,45 +83,6 @@ Shader "GPUQuads/GPUQuads"
         float _OutlineWidth;
 
         sampler2D _SingleModeTex;
-
-        float4x4 eulerAnglesToRotationMatrix(float3 angles)
-        {
-            float3 _angles = angles;
-            _angles.x = _angles.x * acos(-1.0)/180.0;
-            _angles.y = _angles.y * acos(-1.0)/180.0;
-            _angles.z = _angles.z * acos(-1.0)/180.0;
-
-            float ch = cos(_angles.y);
-            float sh = sin(_angles.y);
-
-            float ca = cos(_angles.z);
-            float sa = sin(_angles.z);
-
-            float cb = cos(_angles.x);
-            float sb = sin(_angles.x);
-
-            return float4x4(
-                ch*ca+sh*sb*sa,
-               -ch*sa+sh*sb*ca,
-                         sh*cb,
-                             0,
-
-                         cb*sa,
-                         cb*ca,
-                           -sb,
-                             0,
-
-               -sh*ca+ch*sb*sa,
-                sh*sa+ch*sb*ca,
-                         ch*cb,
-                             0,
-
-                             0,
-                             0,
-                             0,
-                             1
-            );
-        }
 
         void vert(inout appdata_full v, out Input o)
         {
@@ -158,56 +127,42 @@ Shader "GPUQuads/GPUQuads"
             fixed4 c = (fixed4)0;
             fixed4 e = (fixed4)0;
 
-            float2 fl = uv;
-            fl.y = floor(frac(IN.uv_MainTex.y+_Time.y*0.1) * 8.0);
-            fl.x = floor(uv.x * 16.0) + (fl.y*16.0);
-            fl = fl/128.0;
-
-            c = tex2D(_MainTex, fl);
-            c.g = c.r;
-            c.b = c.r;
-            c.a = c.r;
-            e = c;
-
-            float2 uv2 = uv;
-            uv2.x = uv2.x/16.0 + (1.0/16.0*IN.index16);
-            uv2.y = uv2.y/8.0 + (1.0/8.0*IN.index8);
-            uv2 = frac(uv2*5.0+_Time.y/5.0);
-            c = tex2D(_SingleModeTex, uv2);
-            e = c;
-
-            #if _USE_EYE_TEX
-            c = eye(uv, _Time.y, IN.index4);
-            e = c;
+            #if _USE_FFT_TEX
+                float2 fl = uv;
+                fl.y = floor(frac(IN.uv_MainTex.y+_Time.y*0.1) * 8.0);
+                fl.x = floor(uv.x * 16.0) + (fl.y*16.0);
+                fl = fl/128.0;
+                c = (fixed4)tex2D(_MainTex, fl).r;
+            #elif _USE_SINGLE_TEX
+                float2 uv2 = uv;
+                uv2.x = uv2.x/16.0 + (1.0/16.0*IN.index16);
+                uv2.y = uv2.y/8.0 + (1.0/8.0*IN.index8);
+                uv2 = frac(uv2*5.0+_Time.y/5.0);
+                c = tex2D(_SingleModeTex, uv2);
+            #elif _USE_EYE_TEX
+                c = eye(uv, _Time.y, IN.index4);
+            #elif _USE_TEXT_TEX
+                c = UNITY_SAMPLE_TEX2DARRAY(_TexArray, float3(uv, floor(fmod(_Time.y*2.0+IN.index4, 4.0))));
             #endif
 
-            #if _USE_TEXT_TEX
-            c = UNITY_SAMPLE_TEX2DARRAY(_TexArray, float3(uv, floor(fmod(_Time.y*2.0+IN.index4, 4.0))));
             e = c;
-            #endif
 
             c *= _InsideIntensity;
             e *= _InsideIntensity;
 
-            //Outline
-            float l = step(1.0, _OutlineWidth/length(uv.x));
-            float l2 = step(1.0, _OutlineWidth/length(1 - uv.x));
-            float l3 = step(1.0, _OutlineWidth/length(uv.y));
-            float l4 = step(1.0, _OutlineWidth/length(1 - uv.y));
-
-            fixed4 outline = fixed4(l+l2+l3+l4, l+l2+l3+l4, l+l2+l3+l4, l+l2+l3+l4);
+            fixed4 outline = Outline(uv, _OutlineWidth);
 
             c += outline*_OutlineIntensity;
             e += outline*_OutlineIntensity;
 
             #if _USE_FFT_AMPLITUDE
-            o.Albedo = c.rgb * (fixed4)IN.amplitude;
-            o.Emission = _EmissionColor * e * (fixed4)IN.amplitude;
-            o.Alpha = c.a * (fixed4)IN.amplitude;
+                o.Albedo = c.rgb * (fixed4)IN.amplitude;
+                o.Emission = _EmissionColor * e * (fixed4)IN.amplitude;
+                o.Alpha = c.a * (fixed4)IN.amplitude;
             #else
-            o.Albedo = c.rgb;
-            o.Emission = _EmissionColor * e;
-            o.Alpha = c.a;
+                o.Albedo = c.rgb;
+                o.Emission = _EmissionColor * e;
+                o.Alpha = c.a;
             #endif
 
         }
