@@ -6,6 +6,7 @@ Shader "PostEffect/PostEffect"
         _FaceTex ("Texture", 2D) = "white" {}
 
         [Toggle(_BUILD_UP)]_BuildUp("Build up", Float) = 0
+        [Toggle(_X_REVERSE)]_XReverse("X Reverse", Float) = 0
     }
     SubShader
     {
@@ -19,6 +20,7 @@ Shader "PostEffect/PostEffect"
             #pragma fragment frag
 
             #pragma multi_compile _ _BUILD_UP
+            #pragma multi_compile _ _X_REVERSE
 
             #include "UnityCG.cginc"
 
@@ -59,7 +61,14 @@ Shader "PostEffect/PostEffect"
 
             fixed4 frag (v2f i) : SV_Target
             {
-                fixed4 col = tex2D(_MainTex, i.uv);
+
+                float2 uv = i.uv;
+
+                #if _X_REVERSE
+                    uv.x = abs(uv.x - 0.5);
+                #endif
+
+                fixed4 col = tex2D(_MainTex, uv);
 
                 // fixed4 face = tex2D(_FaceTex, i.uv);
                 // face = step(0.1, face);
@@ -67,11 +76,11 @@ Shader "PostEffect/PostEffect"
                 // col += face;
 
                 #if _BUILD_UP
-                fixed4 c = lerp(fixed4(0.4, 0.0, 1.0, 1.0), fixed4(0.7, 1.0, 0.0, 1.0), (sin(_Time.y*80.0)+1.0)*0.5);
-                col = lerp(col, (1.0-col)*c, (sin(_Time.y*40.0)+1.0)*0.5);
+                    fixed4 c = lerp(fixed4(0.4, 0.0, 1.0, 1.0), fixed4(0.7, 1.0, 0.0, 1.0), (sin(_Time.y*80.0)+1.0)*0.5);
+                    col = lerp(col, (1.0-col)*c, (sin(_Time.y*40.0)+1.0)*0.5);
                 #endif
                 
-                col.rgb *= 1.0 - grain(i.uv, 64.0);
+                col.rgb *= 1.0 - grain(uv, 64.0);
 
                 return col;
             }

@@ -8,6 +8,8 @@ namespace W0NYV.Shivering.PostEffect
     {
         [SerializeField] private Material _filter;
 
+        private bool _isXReverse = false;
+
         private void OnRenderImage(RenderTexture src, RenderTexture dest)
         {
             Graphics.Blit(src,dest,_filter);
@@ -22,6 +24,23 @@ namespace W0NYV.Shivering.PostEffect
             else
             {
                 _filter.DisableKeyword("_BUILD_UP");
+            }
+        }
+
+        public void XReverse(float v)
+        {
+            if(v == 1.0)
+            {
+                _isXReverse = !_isXReverse;
+
+                if(_isXReverse)
+                {
+                    _filter.EnableKeyword("_X_REVERSE");
+                }
+                else
+                {
+                    _filter.DisableKeyword("_X_REVERSE");
+                }
             }
         }
     }
