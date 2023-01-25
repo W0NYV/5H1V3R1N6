@@ -2,15 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//GPUQuadsを外部入力によっていじる
 namespace W0NYV.Shivering.GPUQuads
 {
     [RequireComponent(typeof(GPUQuads))]
     public class GPUQuadsSocket : MonoBehaviour
     {
+        [SerializeField] CalcTempoSocket _calcTempoSocket;
         private GPUQuads _gpuQuads;
 
         private void Awake() {
             TryGetComponent<GPUQuads>(out _gpuQuads);
+
+            _calcTempoSocket.OnCalculate.AddListener(bpm => _gpuQuads.BPM = bpm);
         }
 
         #region ChangeMode
@@ -30,9 +34,9 @@ namespace W0NYV.Shivering.GPUQuads
             _gpuQuads.TimeSpeed = 1.0f + 19.0f*v;
         }
 
-        public void DoAccelerate(float v)
+        public void SwitchAccelerate(float v)
         {
-            if(v == 1.0) _gpuQuads.CanAccelerate = true;
+            if(v == 1.0) _gpuQuads.CanAccelerate = !_gpuQuads.CanAccelerate;
         }
     
     }

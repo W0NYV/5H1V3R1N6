@@ -39,24 +39,25 @@ namespace W0NYV.Shivering.GPUQuads
         [SerializeField] private float _lerpSpeed = 1f;
         #endregion
 
-        #region BuildUp
         [SerializeField] private float _timeSpeed = 1f;
         public float TimeSpeed
         {
             get => _timeSpeed;
             set => _timeSpeed = value;
         }
-        #endregion
 
-        #region 加速
+        private float _bpm = 120.0f;
+        public float BPM
+        {
+            set => _bpm = value;
+        }
+
         [SerializeField] private bool _canAccelerate = false;
         public bool CanAccelerate
         {
             get => _canAccelerate;
             set => _canAccelerate = value;
         }
-        float accelerateTime = 0f;
-        #endregion
 
         private float _scaleX = 1f;
         public float ScaleX
@@ -76,27 +77,27 @@ namespace W0NYV.Shivering.GPUQuads
             return t - Mathf.Floor(t);
         }
 
-        private float Accelerate()
-        {
-            if(_canAccelerate)
-            {
-                accelerateTime += Time.deltaTime * 3.0f;
+        // private float Accelerate()
+        // {
+        //     if(_canAccelerate)
+        //     {
+        //         accelerateTime += Time.deltaTime * 3.0f;
 
-                float t = (0.05f/Fract(accelerateTime)-0.05f)*3f;
+        //         float t = (0.05f/Fract(accelerateTime)-0.05f)*3f;
 
-                if(1f <= accelerateTime)
-                {
-                    _canAccelerate = false;
-                }
+        //         if(1f <= accelerateTime)
+        //         {
+        //             _canAccelerate = false;
+        //         }
 
-                return t;
-            }
-            else
-            {
-                accelerateTime = 0f;
-                return 0f;
-            }
-        }
+        //         return t;
+        //     }
+        //     else
+        //     {
+        //         accelerateTime = 0f;
+        //         return 0f;
+        //     }
+        // }
 
         private void Simulation()
         {
@@ -106,6 +107,8 @@ namespace W0NYV.Shivering.GPUQuads
             // if(Input.GetKeyDown("y")) ChangeMode(2);
             // if(Input.GetKeyDown("u")) ChangeMode(3);
             // if(Input.GetKeyDown("i")) ChangeMode(4);
+
+            float time = (Time.time*_bpm/60.0f) * _timeSpeed;
 
             ComputeShader cs = _quadsCS;
             int id = -1;
@@ -127,8 +130,16 @@ namespace W0NYV.Shivering.GPUQuads
             cs.SetInt("_ModeNum", _modeNum);
             cs.SetInt("_PreModeNum", _preModeNum);
             cs.SetFloat("_LerpValue", _lerpValue);
-            cs.SetFloat("_Time", Time.time * _timeSpeed - Accelerate());
-            
+
+            if(_canAccelerate) 
+            {
+                cs.SetFloat("_Time", time - (0.05f/Fract(time)-0.05f)*5f);
+            }
+            else
+            {
+                cs.SetFloat("_Time", Time.time * _timeSpeed);
+            }            
+
             cs.SetFloat("_ScaleX", _scaleX);
 
             cs.SetBuffer(id, "_QuadDataBufferWrite", _quadDataBuffer);
