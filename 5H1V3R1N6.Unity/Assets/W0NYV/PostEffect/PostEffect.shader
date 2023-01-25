@@ -81,10 +81,10 @@ Shader "PostEffect/PostEffect"
                 
                 col.rgb *= 1.0 - grain(uv, 64.0);
 
-                half depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, i.uv);;
-                depth = Linear01Depth(depth);
+                // half depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, i.uv);;
+                // depth = Linear01Depth(depth);
 
-                col = fixed4(depth, depth, depth, 1.0);
+                // col = fixed4(depth, depth, depth, 1.0);
 
                 return col;
             }
