@@ -31,5 +31,6 @@ Material:
     m_Ints: []
     m_Floats:
     - _BuildUp: 0
+    - _XReverse: 0
     m_Colors: []
   m_BuildTextureStacks: []

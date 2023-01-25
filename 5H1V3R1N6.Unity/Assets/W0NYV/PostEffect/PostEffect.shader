@@ -3,7 +3,6 @@ Shader "PostEffect/PostEffect"
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
-        _FaceTex ("Texture", 2D) = "white" {}
 
         [Toggle(_BUILD_UP)]_BuildUp("Build up", Float) = 0
         [Toggle(_X_REVERSE)]_XReverse("X Reverse", Float) = 0
@@ -45,7 +44,7 @@ Shader "PostEffect/PostEffect"
             }
 
             sampler2D _MainTex;
-            sampler2D _FaceTex;
+            sampler2D _CameraDepthTexture;
 
             float rand(float2 st)
             {
@@ -81,6 +80,11 @@ Shader "PostEffect/PostEffect"
                 #endif
                 
                 col.rgb *= 1.0 - grain(uv, 64.0);
+
+                half depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, i.uv);;
+                depth = Linear01Depth(depth);
+
+                col = fixed4(depth, depth, depth, 1.0);
 
                 return col;
             }

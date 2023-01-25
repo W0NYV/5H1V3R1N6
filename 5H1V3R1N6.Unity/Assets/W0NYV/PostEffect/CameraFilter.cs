@@ -15,6 +15,10 @@ namespace W0NYV.Shivering.PostEffect
             Graphics.Blit(src,dest,_filter);
         }
 
+        private void Start() {
+            GetComponent<Camera>().depthTextureMode |= DepthTextureMode.Depth;
+        }
+
         public void BuildUp(float v)
         {
             if(v == 1.0)
