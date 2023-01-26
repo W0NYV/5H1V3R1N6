@@ -51,26 +51,26 @@ Shader "Custom/Head"
         void vert(inout appdata_full v, out Input o)
         {
             UNITY_INITIALIZE_OUTPUT(Input, o);
-
-            float t = tex2Dlod(_FFTTex, clamp(frac(v.vertex.y - _Time.y), 0.0, 1.0));
             
-            v.vertex.x += sin(t * v.vertex.y * 50.0 + _Time.y) * 0.1;
-            //v.vertex.z += t * 0.1;
+            float t = tex2Dlod(_FFTTex, clamp(frac(v.texcoord.y - _Time.y), 0.0, 1.0));
+            t -= 0.7;
+            t = clamp(t, 0.0, 1.0);
+
+            v.vertex.x += sin(t * v.vertex.y * 10.0 + _Time.y) * t;
+            v.vertex.z += cos(t * v.vertex.y * 10.0 + _Time.y) * t;
+
+            //法線を正しくしてないから、たまたまフラットシェーディングっぽく見えるだけじゃねこれ
+            //v.normal = normalize(mul(object2world, v.vertex));
 
         }
 
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
-            // Albedo comes from a texture tinted by color
-            fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
-            o.Albedo = c.rgb;
-            o.Metallic = _Metallic;
-            o.Smoothness = _Glossiness;
+            fixed4 f = tex2D(_FFTTex, clamp(frac(IN.uv_MainTex.y - _Time.y), 0.0, 1.0));
 
             half rim = 1.0 - saturate(dot(normalize(IN.viewDir), o.Normal));
-            o.Emission = _RimColor.rgb * pow(rim, _RimPower);
+            o.Emission = _RimColor.rgb * pow(rim, _RimPower - f.r*5.0);
 
-            o.Alpha = c.a;
         }
         ENDCG
     }

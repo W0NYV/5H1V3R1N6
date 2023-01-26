@@ -32,7 +32,7 @@ Material:
     m_Floats:
     - _Glossiness: 1
     - _Metallic: 1
-    - _RimPower: 4.82
+    - _RimPower: 6.4
     m_Colors:
     - _Color: {r: 0, g: 0, b: 0, a: 0}
     - _RimColor: {r: 1, g: 1, b: 1, a: 1}
