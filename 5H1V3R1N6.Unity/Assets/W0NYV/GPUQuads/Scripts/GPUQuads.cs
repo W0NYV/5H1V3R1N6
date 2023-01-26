@@ -59,13 +59,6 @@ namespace W0NYV.Shivering.GPUQuads
             set => _canAccelerate = value;
         }
 
-        private float _scaleX = 1f;
-        public float ScaleX
-        {
-            get => _scaleX;
-            set => _scaleX = value;
-        }
-
         public void ChangeMode(int modeNum)
         {
             _modeNum = modeNum;
@@ -76,28 +69,6 @@ namespace W0NYV.Shivering.GPUQuads
         {
             return t - Mathf.Floor(t);
         }
-
-        // private float Accelerate()
-        // {
-        //     if(_canAccelerate)
-        //     {
-        //         accelerateTime += Time.deltaTime * 3.0f;
-
-        //         float t = (0.05f/Fract(accelerateTime)-0.05f)*3f;
-
-        //         if(1f <= accelerateTime)
-        //         {
-        //             _canAccelerate = false;
-        //         }
-
-        //         return t;
-        //     }
-        //     else
-        //     {
-        //         accelerateTime = 0f;
-        //         return 0f;
-        //     }
-        // }
 
         private void Simulation()
         {
@@ -133,14 +104,14 @@ namespace W0NYV.Shivering.GPUQuads
 
             if(_canAccelerate) 
             {
-                cs.SetFloat("_Time", time - (0.05f/Fract(time)-0.05f)*5f);
+                cs.SetFloat("_Time", time - 0.09f/Fract(time)-0.09f);
+                cs.SetFloat("_ScaleOffset", Mathf.Min(0.9f/Fract(time)-0.9f, 1f));
             }
             else
             {
                 cs.SetFloat("_Time", Time.time * _timeSpeed);
+                cs.SetFloat("_ScaleOffset", 0f);
             }            
-
-            cs.SetFloat("_ScaleX", _scaleX);
 
             cs.SetBuffer(id, "_QuadDataBufferWrite", _quadDataBuffer);
 
