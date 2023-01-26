@@ -58,6 +58,30 @@ Shader "PostEffect/PostEffect"
                 return (fixed3)(fmod((fmod(x, 13.0) + 1.0) * (fmod(x, 123.0) + 1.0), 0.01)-0.005)*strength;
             }
 
+            //reference https://light11.hatenadiary.com/entry/2019/01/04/232733
+            fixed4 RadicalIroSyusa(float2 uv)
+            {
+
+                fixed4 col = (fixed4)0;
+
+                float sampleCount = 3.0;
+                float strength = 0.1;
+
+                float3x3 colMat = float3x3(1.0, 1.0, 1.0,  
+                                           0.7, 1.0, 0.0, 
+                                           0.4, 0.0, 1.0);
+                float2 uv2 = uv - 0.5;
+                float distance = length(uv2);
+                float factor = strength / sampleCount * distance;
+                for(int j = 0; j < sampleCount; j++)
+                {
+                    float uvOffset = 1 - factor * j;
+                    col += tex2D(_MainTex, uv2 * uvOffset + 0.5) * fixed4(colMat[j], 1.0);
+                }
+
+                return col;
+            }
+
             fixed4 frag (v2f i) : SV_Target
             {
 
@@ -69,22 +93,15 @@ Shader "PostEffect/PostEffect"
 
                 fixed4 col = tex2D(_MainTex, uv);
 
-                // fixed4 face = tex2D(_FaceTex, i.uv);
-                // face = step(0.1, face);
-                // face = fixed4(face.r+face.g+face.b/3.0, face.r+face.g+face.b/3.0, face.r+face.g+face.b/3.0, face.r+face.g+face.b/3.0);
-                // col += face;
-
                 #if _BUILD_UP
                     fixed4 c = lerp(fixed4(0.4, 0.0, 1.0, 1.0), fixed4(0.7, 1.0, 0.0, 1.0), (sin(_Time.y*80.0)+1.0)*0.5);
                     col = lerp(col, (1.0-col)*c, (sin(_Time.y*40.0)+1.0)*0.5);
                 #endif
-                
-                col.rgb *= 1.0 - grain(uv, 64.0);
 
-                // half depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, i.uv);;
-                // depth = Linear01Depth(depth);
+                //ラディカル色収差付ける？
+                //col = RadicalIroSyusa(uv);
 
-                // col = fixed4(depth, depth, depth, 1.0);
+                col.rgb *= 1.0 - grain(i.uv, 128.0);
 
                 return col;
             }
