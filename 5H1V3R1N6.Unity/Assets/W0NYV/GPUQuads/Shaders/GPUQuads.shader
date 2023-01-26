@@ -153,7 +153,8 @@ Shader "GPUQuads/GPUQuads"
             #elif _USE_TEXT_TEX
                 c = UNITY_SAMPLE_TEX2DARRAY(_TexArray, float3(uv, floor(fmod(_Time.y*2.0+IN.index4, 4.0))));
             #elif _USE_VCOL_TEX
-                c = IN.vColor;
+                fixed vc = frac(_Time.y*0.1 + IN.vColor.r) * 0.45;
+                c = fixed4((fixed3)vc, 1.0);
             #endif
 
             fixed4 e = c;
