@@ -11,6 +11,8 @@ namespace W0NYV.Shivering.GPUQuads
         [SerializeField] CalcTempoSocket _calcTempoSocket;
         private GPUQuads _gpuQuads;
 
+        private bool _canUseTime = false;
+
         private void Awake() {
             TryGetComponent<GPUQuads>(out _gpuQuads);
 
@@ -29,9 +31,25 @@ namespace W0NYV.Shivering.GPUQuads
 
         #endregion
     
+        // public void ChangeTimeSpeed(float v)
+        // {
+        //     if(v == 1.0)
+        //     {
+        //         _canUseTime = !_canUseTime;
+        //         if(_canUseTime)
+        //         {
+        //             _gpuQuads.TimeSpeed = 1f;
+        //         }
+        //         else
+        //         {
+        //             _gpuQuads.TimeSpeed = 0f;
+        //         }
+        //     }
+        // }
+
         public void BuildUp(float v)
         {
-            _gpuQuads.TimeSpeed = 1.0f + 19.0f*v;
+            _gpuQuads.TimeSpeed = 1f + 19.0f*v;            
         }
 
         public void SwitchAccelerate(float v)

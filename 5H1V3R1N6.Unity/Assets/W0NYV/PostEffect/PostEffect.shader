@@ -65,7 +65,7 @@ Shader "PostEffect/PostEffect"
                 fixed4 col = (fixed4)0;
 
                 float sampleCount = 3.0;
-                float strength = 0.1;
+                float strength = 0.025;
 
                 float3x3 colMat = float3x3(1.0, 1.0, 1.0,  
                                            0.7, 1.0, 0.0, 
@@ -99,7 +99,7 @@ Shader "PostEffect/PostEffect"
                 #endif
 
                 //ラディカル色収差付ける？
-                //col = RadicalIroSyusa(uv);
+                col = RadicalIroSyusa(uv);
 
                 col.rgb *= 1.0 - grain(i.uv, 128.0);
 

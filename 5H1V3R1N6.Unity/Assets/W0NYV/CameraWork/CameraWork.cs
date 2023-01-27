@@ -50,6 +50,20 @@ namespace W0NYV.Shivering.CameraWork
             }
         }
 
+        public void Up(float v)
+        {
+            if(v == 1.0f)
+            {
+                if(t>1f)
+                {
+                    t = 0;
+                    current = transform.position;
+                    rnd = new Vector3(0.75f, _aimDistance, 1.25f);
+                    canMove = true;
+                }
+            }
+        }
+
         public void Translate(float v)
         {
             if(v == 1.0f)
