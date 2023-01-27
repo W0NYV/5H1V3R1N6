@@ -28,10 +28,13 @@ Shader "Custom/Head"
         // Use shader model 3.0 target, to get nicer looking lighting
         #pragma target 3.0
 
+        #include "./cginc/Eye.cginc"
+
         struct Input
         {
             float2 uv_MainTex;
             float3 viewDir;
+            float4 pos;
         };
 
         fixed4 _RimColor;
@@ -52,6 +55,8 @@ Shader "Custom/Head"
         {
             UNITY_INITIALIZE_OUTPUT(Input, o);
             
+            o.pos =  UnityObjectToClipPos(v.vertex);
+
             float t = tex2Dlod(_FFTTex, clamp(frac(v.texcoord.y - _Time.y), 0.0, 1.0));
             t -= 0.7;
             t = clamp(t, 0.0, 1.0);
@@ -68,11 +73,15 @@ Shader "Custom/Head"
         {
             fixed4 f = tex2D(_FFTTex, clamp(frac(IN.uv_MainTex.y - _Time.y), 0.0, 1.0));
 
-            o.Alpha = _Alpha;
-
             half rim = 1.0 - saturate(dot(normalize(IN.viewDir), o.Normal));
             o.Emission = _RimColor.rgb * pow(rim, _RimPower - f.r*5.0);
-
+            
+            //half2 uv = IN.pos.xy;
+            //fixed4 e = eye(uv, _Time.y/2.0, 0.0);
+            // fixed4 e = eye(frac(IN.uv_MainTex*10.0), _Time.y/2.0, floor(IN.uv_MainTex*10.0)/10.0);
+            // o.Emission = e;
+            
+            o.Alpha = _Alpha;
 
         }
         ENDCG
