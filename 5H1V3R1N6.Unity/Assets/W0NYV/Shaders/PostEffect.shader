@@ -99,7 +99,7 @@ Shader "PostEffect/PostEffect"
                 #endif
 
                 //ラディカル色収差付ける？
-                col = RadicalIroSyusa(uv);
+                //col = RadicalIroSyusa(uv);
 
                 col.rgb *= 1.0 - grain(i.uv, 128.0);
 
