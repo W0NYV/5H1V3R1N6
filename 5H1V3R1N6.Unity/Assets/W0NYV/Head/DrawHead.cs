@@ -5,12 +5,17 @@ using UnityEngine.Rendering;
 
 namespace W0NYV
 {
-    [RequireComponent(typeof(Camera))]
+    // [RequireComponent(typeof(Camera))]
     public class DrawHead : MonoBehaviour
     {
 
         [SerializeField] private Mesh _mesh;
         [SerializeField] private Material _material;
+
+        public void SetAlpha(float v)
+        {
+            _material.SetFloat("_Alpha", v);
+        }
 
         private void Update() {
             Graphics.DrawMesh(_mesh, Vector3.zero, Quaternion.identity, _material, 0);

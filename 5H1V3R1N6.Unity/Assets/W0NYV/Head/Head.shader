@@ -2,15 +2,13 @@ Shader "Custom/Head"
 {
     Properties
     {
-        _Color ("Color", Color) = (1,1,1,1)
-        _MainTex ("Albedo (RGB)", 2D) = "white" {}
-        _Glossiness ("Smoothness", Range(0,1)) = 0.5
-        _Metallic ("Metallic", Range(0,1)) = 0.0
 
         _FFTTex ("FFT", 2D) = "white" {}
 
         _RimColor ("Rim Color", Color) = (1.0, 1.0, 1.0, 1.0)
         _RimPower ("RimPower", Range(0.5, 8.0)) = 3.0
+
+        _Alpha ("Alpha", Range(0.0, 1.0)) = 1.0
     }
     SubShader
     {
@@ -30,21 +28,17 @@ Shader "Custom/Head"
         // Use shader model 3.0 target, to get nicer looking lighting
         #pragma target 3.0
 
-        sampler2D _MainTex;
-
         struct Input
         {
             float2 uv_MainTex;
             float3 viewDir;
         };
 
-        half _Glossiness;
-        half _Metallic;
-        fixed4 _Color;
-
         fixed4 _RimColor;
         float _RimPower;
         sampler2D _FFTTex;
+
+        float _Alpha;
 
         // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
         // See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
@@ -74,8 +68,7 @@ Shader "Custom/Head"
         {
             fixed4 f = tex2D(_FFTTex, clamp(frac(IN.uv_MainTex.y - _Time.y), 0.0, 1.0));
 
-            o.Albedo = _Color.rgb;
-            o.Alpha = _Color.a;
+            o.Alpha = _Alpha;
 
             half rim = 1.0 - saturate(dot(normalize(IN.viewDir), o.Normal));
             o.Emission = _RimColor.rgb * pow(rim, _RimPower - f.r*5.0);
