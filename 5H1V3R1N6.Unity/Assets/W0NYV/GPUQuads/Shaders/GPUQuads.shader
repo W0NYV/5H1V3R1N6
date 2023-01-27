@@ -111,8 +111,8 @@ Shader "GPUQuads/GPUQuads"
             object2world._14_24_34 += pos.xyz;
 
             //要相談
-            o.vColor = hsv2rgb(frac(sin((rand3(v.vertex)+index)*10000.0)), 1.0, 1.0);
-            //o.vColor = fixed4((fixed3)frac(sin((rand3(v.vertex)+index)*10000.0)), 1.0);
+            //o.vColor = hsv2rgb(frac(sin((rand3(v.vertex)+index)*10000.0)), 1.0, 1.0);
+            o.vColor = fixed4((fixed3)frac(sin((rand3(v.vertex)+index+floor(_Time.y*2.0))*10000.0)), 1.0);
 
             v.vertex = mul(object2world, v.vertex);
 
@@ -146,14 +146,14 @@ Shader "GPUQuads/GPUQuads"
                 float2 uv2 = uv;
                 uv2.x = uv2.x/16.0 + (1.0/16.0*IN.index16);
                 uv2.y = uv2.y/8.0 + (1.0/8.0*IN.index8);
-                uv2 = frac(uv2*5.0+_Time.y/5.0);
+                uv2 = frac(uv2*1.0+_Time.y/20.0);
                 c = tex2D(_SingleModeTex, uv2);
             #elif _USE_EYE_TEX
                 c = eye(uv, _Time.y, IN.index4);
             #elif _USE_TEXT_TEX
                 c = UNITY_SAMPLE_TEX2DARRAY(_TexArray, float3(uv, floor(fmod(_Time.y*2.0+IN.index4, 4.0))));
             #elif _USE_VCOL_TEX
-                fixed vc = frac(_Time.y*0.1 + IN.vColor.r) * 0.45;
+                fixed vc = frac(_Time/3.0+IN.vColor.r) * 0.25 + step(frac(_Time/3.0+IN.vColor.r), 0.05);
                 c = fixed4((fixed3)vc, 1.0);
             #endif
 

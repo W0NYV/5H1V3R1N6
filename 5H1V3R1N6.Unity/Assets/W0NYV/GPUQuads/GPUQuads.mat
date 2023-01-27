@@ -30,7 +30,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SingleModeTex:
-        m_Texture: {fileID: 2800000, guid: 7b97284ee5af0e84e8b58502df067bd5, type: 3}
+        m_Texture: {fileID: 2800000, guid: 1818c9914472b1c4894fcde33a991bd9, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _TexArray:
@@ -44,7 +44,7 @@ Material:
     - _InsideIntensity: 0
     - _Metallic: 0
     - _OutlineIntensity: 0
-    - _OutlineWidth: 0.01007
+    - _OutlineWidth: 0.003
     - _TexArrayIndex: 0
     - _UseEyeTex: 1
     - _UseFFTAmplitude: 0
