@@ -22,6 +22,10 @@ namespace W0NYV.Shivering
 
         [SerializeField] private RenderTexture _renderTex;
 
+        [SerializeField] private Text _rangeGainText;
+        private float _dynamicRange = 32;
+        private float _gain = 20;
+
         private void Start()
         {
 
@@ -53,12 +57,26 @@ namespace W0NYV.Shivering
             _spectrumAnalyzer.deviceID = dev.ID;
             _spectrumAnalyzer.resolution = 128;
             _spectrumAnalyzer.autoGain = false;
-            _spectrumAnalyzer.gain = 32f;
-            _spectrumAnalyzer.dynamicRange = 20f; 
+            _spectrumAnalyzer.gain = _gain;
+            _spectrumAnalyzer.dynamicRange = _dynamicRange; 
 
             var spectrumAnalyzer = gameObject.AddComponent<Lasp.SpectrumToTexture>();
             spectrumAnalyzer.renderTexture = _renderTex;
             spectrumAnalyzer.overrideList = new Lasp.SpectrumToTexture.MaterialOverride[0];
+        }
+
+        public void ChangeDynamicRange(float v)
+        {
+            _dynamicRange = v * 119 + 1; 
+            _spectrumAnalyzer.dynamicRange = _dynamicRange;
+            _rangeGainText.text = "DynamicRange: " + _dynamicRange.ToString("0.00") + "\n" + "Gain: " + _gain.ToString("0.00");
+        }
+
+        public void ChangeGain(float v)
+        {
+            _gain = v * 130 - 10;
+            _spectrumAnalyzer.gain = _gain;
+            _rangeGainText.text = "DynamicRange: " + _dynamicRange.ToString("0.00") + "\n" + "Gain: " + _gain.ToString("0.00");
         }
     }
 }
