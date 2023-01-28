@@ -32,7 +32,7 @@ namespace W0NYV.Shivering.CameraWork
 
         public void ChangeAimDistance(float v)
         {
-            float value = v*7f + 3f;
+            float value = v*9f + 1f;
             _aimDistance = value;
         }
 
@@ -44,7 +44,7 @@ namespace W0NYV.Shivering.CameraWork
                 {
                     t = 0;
                     current = transform.position;
-                    rnd = new Vector3(0, 0, -_aimDistance);
+                    rnd = new Vector3(0, 0, -3f);
                     canMove = false;
                 }
             }

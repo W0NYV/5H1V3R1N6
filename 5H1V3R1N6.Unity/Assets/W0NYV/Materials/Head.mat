@@ -31,6 +31,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _Alpha: 0
+    - _Cutoff: 0.01
     - _Glossiness: 1
     - _Metallic: 1
     - _RimPower: 6.4

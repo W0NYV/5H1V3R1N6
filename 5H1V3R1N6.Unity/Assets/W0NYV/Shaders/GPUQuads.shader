@@ -128,7 +128,7 @@ Shader "GPUQuads/GPUQuads"
 
             o.rnd = float4(rand((float)index), rand(index+300.0), rand(index+200.0), rand((float)index+128.0));
 
-            o.amplitude = tex2Dlod(_MainTex, float4(index/128.0, 0.0, 0.0, 0.0)).r;
+            o.amplitude = tex2Dlod(_MainTex, float4(index/128.0, 0.0, 0.0, 0.0)).r * 3.0;
 
             #endif
         }

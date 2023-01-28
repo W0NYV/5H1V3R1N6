@@ -2,6 +2,7 @@ Shader "Custom/Head"
 {
     Properties
     {
+        _Cutoff ("Cutoff", Range(0, 1)) = 0.01
 
         _FFTTex ("FFT", 2D) = "white" {}
 
@@ -12,18 +13,19 @@ Shader "Custom/Head"
     }
     SubShader
     {
-        Tags { "RenderType"="Transparent" "Queue"="Transparent"}
+        Tags { "RenderType"="TransparentCutout" "Queue"="AlphaTest" }
+//        Tags { "RenderType"="Opaque" }
         LOD 200
 
-		Pass
-        {
-            ZWrite ON
-            ColorMask 0
-		}
+		// Pass
+        // {
+        //     ZWrite ON
+        //     ColorMask 0
+		// }
 
         CGPROGRAM
         // Physically based Standard lighting model, and enable shadows on all light types
-        #pragma surface surf Standard fullforwardshadows vertex:vert alpha:blend
+        #pragma surface surf Standard fullforwardshadows vertex:vert alphatest:_Cutoff//alpha:fade
 
         // Use shader model 3.0 target, to get nicer looking lighting
         #pragma target 3.0
@@ -65,7 +67,7 @@ Shader "Custom/Head"
             v.vertex.z += cos(t * v.vertex.y * 10.0 + _Time.y) * t;
 
             //法線を正しくしてないから、たまたまフラットシェーディングっぽく見えるだけじゃねこれ
-            //v.normal = normalize(mul(object2world, v.vertex));
+            // v.normal = normalize(v.vertex);
 
         }
 
@@ -74,7 +76,7 @@ Shader "Custom/Head"
             fixed4 f = tex2D(_FFTTex, clamp(frac(IN.uv_MainTex.y - _Time.y), 0.0, 1.0));
 
             half rim = 1.0 - saturate(dot(normalize(IN.viewDir), o.Normal));
-            o.Emission = _RimColor.rgb * pow(rim, _RimPower - f.r*5.0);
+            o.Emission = _RimColor.rgb * pow(rim, _RimPower - f.r*5.0) * _Alpha;
             
             //half2 uv = IN.pos.xy;
             //fixed4 e = eye(uv, _Time.y/2.0, 0.0);
