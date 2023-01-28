@@ -1,4 +1,4 @@
-float3x3 tileMat(int dtid, int quadCount, float time)
+float3x3 tileMat(int dtid, int quadCount, float time, float actionValue)
 {
 
     float sclRatioX = 0.385;
@@ -6,7 +6,7 @@ float3x3 tileMat(int dtid, int quadCount, float time)
 
     float posX = fmod(dtid, 16.0)*sclRatioX - 7.5*sclRatioX;
     float posY = floor(dtid/16.0)*sclRatioY - 3.5*sclRatioY;
-    float posZ = abs(sin(length(float2(posX, posY)) + time));
+    float posZ = abs(sin(length(float2(posX, posY)) + time)) * actionValue;
 
     float3 pos = float3(posX, posY, posZ);
     float3 rot = (float3)0.0;

@@ -27,6 +27,8 @@ float _Time;
 
 float _ScaleOffset;
 
+float _ActionValue;
+
 [numthreads(THREAD_SIZE, 1, 1)]
 void TransformCS(uint3 DTid : SV_DispatchThreadID, uint3 Gid : SV_GroupID, uint3 GTid : SV_GroupThreadID, uint GI : SV_GroupIndex)
 {
@@ -43,7 +45,7 @@ void TransformCS(uint3 DTid : SV_DispatchThreadID, uint3 Gid : SV_GroupID, uint3
     float3x3 oneBoxMatrix = oneBox(GT_ID, DT_ID);
     // float3x3 loopBoxMatrix = loopBox(GT_ID, G_ID, 1.0);
     float3x3 lineMatrix = lineMat(DT_ID, _QuadCount, _Time);
-    float3x3 tileMatrix = tileMat(DT_ID, _QuadCount, _Time);
+    float3x3 tileMatrix = tileMat(DT_ID, _QuadCount, _Time, _ActionValue);
     float3x3 sphereMatrix = sphereMat(DT_ID, _QuadCount, _Time);
     float3x3 tiledBoxMatrix = tiledBoxMat(DT_ID);
     float3x3 tunnelMatrix = tunnelMat(DT_ID, 64, _Time);

@@ -149,6 +149,7 @@ Shader "GPUQuads/GPUQuads"
                 c = eye(uv, _Time.y, IN.index4);
             #elif _USE_TEXT_TEX
                 c = UNITY_SAMPLE_TEX2DARRAY(_TexArray, float3(uv, floor(fmod(_Time.y*2.0+IN.index4, 4.0))));
+                c.rgb *= 0.85;
             #elif _USE_WAVE_TEX
                 float4 rnd = IN.rnd;
                 float2 p = (uv - 0.5) * 2.0;

@@ -59,6 +59,9 @@ namespace W0NYV.Shivering.GPUQuads
             set => _canAccelerate = value;
         }
 
+        [SerializeField] private float _actionValue = 1f;
+        public float ActionValue { set => _actionValue = value; }
+
         public void ChangeMode(int modeNum)
         {
             _modeNum = modeNum;
@@ -101,6 +104,8 @@ namespace W0NYV.Shivering.GPUQuads
             cs.SetInt("_ModeNum", _modeNum);
             cs.SetInt("_PreModeNum", _preModeNum);
             cs.SetFloat("_LerpValue", _lerpValue);
+
+            cs.SetFloat("_ActionValue", _actionValue);
 
             if(_canAccelerate) 
             {

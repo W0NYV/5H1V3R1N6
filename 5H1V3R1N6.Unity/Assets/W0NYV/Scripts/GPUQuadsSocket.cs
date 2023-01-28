@@ -30,22 +30,11 @@ namespace W0NYV.Shivering.GPUQuads
         public void ChangeLissajousMode(float v){if(v == 1.0) _gpuQuads.ChangeMode(6);}
 
         #endregion
-    
-        // public void ChangeTimeSpeed(float v)
-        // {
-        //     if(v == 1.0)
-        //     {
-        //         _canUseTime = !_canUseTime;
-        //         if(_canUseTime)
-        //         {
-        //             _gpuQuads.TimeSpeed = 1f;
-        //         }
-        //         else
-        //         {
-        //             _gpuQuads.TimeSpeed = 0f;
-        //         }
-        //     }
-        // }
+
+        public void ChangeActionValue(float v)
+        {
+            _gpuQuads.ActionValue = v;
+        }
 
         public void BuildUp(float v)
         {
