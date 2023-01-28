@@ -35,7 +35,7 @@ namespace W0NYV.Shivering.GPUQuads
         public void EyeTex(float v) {if(v == 1.0) _quadsRenderer.SwitchTex(1);}
         public void FFTTex(float v) {if(v == 1.0) _quadsRenderer.SwitchTex(2);}
         public void SingleTex(float v) {if(v == 1.0) _quadsRenderer.SwitchTex(3);}
-        public void VColorTex(float v) {if(v == 1.0) _quadsRenderer.SwitchTex(4);}
+        public void WaveTex(float v) {if(v == 1.0) _quadsRenderer.SwitchTex(4);}
 
         #endregion
 

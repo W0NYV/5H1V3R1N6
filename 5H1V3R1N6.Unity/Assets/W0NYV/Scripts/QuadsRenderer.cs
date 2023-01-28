@@ -18,7 +18,7 @@ namespace W0NYV.Shivering.GPUQuads
             "_USE_EYE_TEX",
             "_USE_FFT_TEX",
             "_USE_SINGLE_TEX",
-            "_USE_VCOL_TEX",
+            "_USE_WAVE_TEX",
         };
 
         private uint[] args = new uint[5] { 0, 0, 0, 0, 0 };

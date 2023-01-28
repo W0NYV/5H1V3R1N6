@@ -22,7 +22,7 @@ Shader "GPUQuads/GPUQuads"
         [Toggle(_USE_EYE_TEX)]_UseEyeTex("Use EyeTex", Float) = 0
         [Toggle(_USE_FFT_TEX)]_UseFFTTex("Use FFTTex", Float) = 0
         [Toggle(_USE_SINGLE_TEX)]_UseSingleTex("Use SingleTex", Float) = 0
-        [Toggle(_USE_VCOL_TEX)]_UseVColTex("Use VColTex", Float) = 0
+        [Toggle(_USE_WAVE_TEX)]_UseWaveTex("Use WaveTex", Float) = 0
 
         [Toggle(_USE_FFT_AMPLITUDE)]_UseFFTAmplitude("Use FFT Amplitude", Float) = 0
     }
@@ -43,7 +43,7 @@ Shader "GPUQuads/GPUQuads"
         #pragma multi_compile _ _USE_EYE_TEX
         #pragma multi_compile _ _USE_SINGLE_TEX
         #pragma multi_compile _ _USE_FFT_TEX
-        #pragma multi_compile _ _USE_VCOL_TEX
+        #pragma multi_compile _ _USE_WAVE_TEX
 
         #pragma multi_compile _ _USE_FFT_AMPLITUDE
 
@@ -149,20 +149,15 @@ Shader "GPUQuads/GPUQuads"
                 c = eye(uv, _Time.y, IN.index4);
             #elif _USE_TEXT_TEX
                 c = UNITY_SAMPLE_TEX2DARRAY(_TexArray, float3(uv, floor(fmod(_Time.y*2.0+IN.index4, 4.0))));
-            #elif _USE_VCOL_TEX
+            #elif _USE_WAVE_TEX
                 float4 rnd = IN.rnd;
                 float2 p = (uv - 0.5) * 2.0;
-
                 p = mul(rot(acos(-1.0) * 2.0 * floor(rnd.r*4.99)/4.0), p);
-
                 p.x += _Time.y * rnd.g;
                 rnd *= 3.0;
                 fixed vc = rnd*0.05 / length(frac(p.x*rnd.b));
-
                 vc = step(rand(rnd*3.0)*0.75, vc);
-
                 vc *= clamp(1.0-rnd.a, 0.4, 0.85);
-
                 c = (fixed4)vc;
             #endif
 
