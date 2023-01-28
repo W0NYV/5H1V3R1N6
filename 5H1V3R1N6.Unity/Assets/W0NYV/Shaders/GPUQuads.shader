@@ -50,8 +50,7 @@ Shader "GPUQuads/GPUQuads"
         #include "./cginc/Outline.cginc"
         #include "./cginc/Eye.cginc"
         #include "./cginc/EulerAnglesToRotationMatrix.cginc"
-        #include "./cginc/HSV2RGB.cginc"
-        #include "./cginc/Rand.cginc"
+        #include "./cginc/Utilities.cginc"
 
         struct Input
         {
@@ -62,7 +61,7 @@ Shader "GPUQuads/GPUQuads"
             float index16;
             float amplitude;
 
-            fixed4 vColor;
+            float4 rnd;
         };
 
         struct QuadData
@@ -110,10 +109,6 @@ Shader "GPUQuads/GPUQuads"
 
             object2world._14_24_34 += pos.xyz;
 
-            //要相談
-            //o.vColor = hsv2rgb(frac(sin((rand3(v.vertex)+index)*10000.0)), 1.0, 1.0);
-            o.vColor = fixed4((fixed3)frac(sin((rand3(v.vertex)+index+floor(_Time.y*2.0))*10000.0)), 1.0);
-
             v.vertex = mul(object2world, v.vertex);
 
             v.normal = normalize(mul(object2world, v.vertex));
@@ -122,6 +117,8 @@ Shader "GPUQuads/GPUQuads"
             o.index4 = floor(fmod(index, 4.0));
             o.index8 = floor(index/16.0);
             o.index16 = floor(fmod(index, 16.0));
+
+            o.rnd = float4(rand((float)index), rand(index+300.0), rand(index+200.0), rand((float)index+128.0));
 
             o.amplitude = tex2Dlod(_MainTex, float4(index/128.0, 0.0, 0.0, 0.0)).r;
 
@@ -153,8 +150,20 @@ Shader "GPUQuads/GPUQuads"
             #elif _USE_TEXT_TEX
                 c = UNITY_SAMPLE_TEX2DARRAY(_TexArray, float3(uv, floor(fmod(_Time.y*2.0+IN.index4, 4.0))));
             #elif _USE_VCOL_TEX
-                fixed vc = frac(_Time/3.0+IN.vColor.r) * 0.25 + step(frac(_Time/3.0+IN.vColor.r), 0.05);
-                c = fixed4((fixed3)vc, 1.0);
+                float4 rnd = IN.rnd;
+                float2 p = (uv - 0.5) * 2.0;
+
+                p = mul(rot(acos(-1.0) * 2.0 * floor(rnd.r*4.99)/4.0), p);
+
+                p.x += _Time.y * rnd.g;
+                rnd *= 3.0;
+                fixed vc = rnd*0.05 / length(frac(p.x*rnd.b));
+
+                vc = step(rand(rnd*3.0)*0.75, vc);
+
+                vc *= clamp(1.0-rnd.a, 0.4, 0.85);
+
+                c = (fixed4)vc;
             #endif
 
             fixed4 e = c;
