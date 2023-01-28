@@ -25,8 +25,6 @@ int _PreModeNum;
 float _LerpValue;
 float _Time;
 
-float _ScaleOffset;
-
 float _ActionValue;
 
 [numthreads(THREAD_SIZE, 1, 1)]
@@ -75,5 +73,5 @@ void TransformCS(uint3 DTid : SV_DispatchThreadID, uint3 Gid : SV_GroupID, uint3
 
     _QuadDataBufferWrite[DT_ID].position = pos;
     _QuadDataBufferWrite[DT_ID].rotation = rot;
-    _QuadDataBufferWrite[DT_ID].scale = scl + _ScaleOffset;
+    _QuadDataBufferWrite[DT_ID].scale = scl;
 }

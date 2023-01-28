@@ -45,11 +45,6 @@ namespace W0NYV.Shivering.GPUQuads
         {
             _gpuQuads.TimeSpeed = 1f + 19.0f*v;            
         }
-
-        public void SwitchAccelerate(float v)
-        {
-            if(v == 1.0) _gpuQuads.CanAccelerate = !_gpuQuads.CanAccelerate;
-        }
     
     }
 }

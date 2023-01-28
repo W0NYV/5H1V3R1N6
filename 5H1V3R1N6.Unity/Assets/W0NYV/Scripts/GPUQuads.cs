@@ -54,13 +54,6 @@ namespace W0NYV.Shivering.GPUQuads
             set => _bpm = value;
         }
 
-        [SerializeField] private bool _canAccelerate = false;
-        public bool CanAccelerate
-        {
-            get => _canAccelerate;
-            set => _canAccelerate = value;
-        }
-
         [SerializeField] private float _actionValue = 1f;
         public float ActionValue { set => _actionValue = value; }
 
@@ -108,17 +101,8 @@ namespace W0NYV.Shivering.GPUQuads
             cs.SetFloat("_LerpValue", _lerpValue);
 
             cs.SetFloat("_ActionValue", _actionValue);
-
-            if(_canAccelerate) 
-            {
-                cs.SetFloat("_Time", time - 0.09f/Fract(time)-0.09f);
-                cs.SetFloat("_ScaleOffset", Mathf.Min(0.9f/Fract(time)-0.9f, 1f));
-            }
-            else
-            {
-                cs.SetFloat("_Time", Time.time * _timeSpeed);
-                cs.SetFloat("_ScaleOffset", 0f);
-            }            
+            
+            cs.SetFloat("_Time", Time.time * _timeSpeed);            
 
             cs.SetBuffer(id, "_QuadDataBufferWrite", _quadDataBuffer);
 
