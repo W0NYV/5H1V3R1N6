@@ -18,11 +18,14 @@ Shader "GPUQuads/GPUQuads"
         //SingleTexMode
         _SingleModeTex ("Single Mode Texture", 2D) = "white" {}
 
+        _YmgTexArray ("Ymg Texture Array", 2DArray) = "" {}
+
         [Toggle(_USE_TEXT_TEX)]_UseTextTex("Use TextTex", Float) = 0
         [Toggle(_USE_EYE_TEX)]_UseEyeTex("Use EyeTex", Float) = 0
         [Toggle(_USE_FFT_TEX)]_UseFFTTex("Use FFTTex", Float) = 0
         [Toggle(_USE_SINGLE_TEX)]_UseSingleTex("Use SingleTex", Float) = 0
         [Toggle(_USE_WAVE_TEX)]_UseWaveTex("Use WaveTex", Float) = 0
+        [Toggle(_USE_YMG_TEX)]_UseYmgTex("Use YmgTex", Float) = 0
 
         [Toggle(_USE_FFT_AMPLITUDE)]_UseFFTAmplitude("Use FFT Amplitude", Float) = 0
     }
@@ -44,6 +47,7 @@ Shader "GPUQuads/GPUQuads"
         #pragma multi_compile _ _USE_SINGLE_TEX
         #pragma multi_compile _ _USE_FFT_TEX
         #pragma multi_compile _ _USE_WAVE_TEX
+        #pragma multi_compile _ _USE_YMG_TEX
 
         #pragma multi_compile _ _USE_FFT_AMPLITUDE
 
@@ -59,6 +63,7 @@ Shader "GPUQuads/GPUQuads"
             float index4;
             float index8;
             float index16;
+            float index32;
             float amplitude;
 
             float4 rnd;
@@ -87,6 +92,8 @@ Shader "GPUQuads/GPUQuads"
         float _OutlineWidth;
 
         sampler2D _SingleModeTex;
+
+        UNITY_DECLARE_TEX2DARRAY(_YmgTexArray);
 
         void vert(inout appdata_full v, out Input o)
         {
@@ -117,6 +124,7 @@ Shader "GPUQuads/GPUQuads"
             o.index4 = floor(fmod(index, 4.0));
             o.index8 = floor(index/16.0);
             o.index16 = floor(fmod(index, 16.0));
+            o.index32 = floor(fmod(index, 32.0));
 
             o.rnd = float4(rand((float)index), rand(index+300.0), rand(index+200.0), rand((float)index+128.0));
 
@@ -160,6 +168,9 @@ Shader "GPUQuads/GPUQuads"
                 vc = step(rand(rnd*3.0)*0.75, vc);
                 vc *= clamp(1.0-rnd.a, 0.4, 0.85);
                 c = (fixed4)vc;
+            #elif _USE_YMG_TEX
+                c = UNITY_SAMPLE_TEX2DARRAY(_YmgTexArray, float3(uv, fmod(IN.index32 + IN.rnd.r*128.0 + _Time.y * 8.0, 32.0)));
+                c *= 1.5;
             #endif
 
             fixed4 e = c;

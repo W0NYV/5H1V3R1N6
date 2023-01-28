@@ -10,7 +10,7 @@ Material:
   m_Name: GPUQuads
   m_Shader: {fileID: 4800000, guid: b4cdcaa10b296bf489c6d1e1be4e40f6, type: 3}
   m_ValidKeywords:
-  - _USE_SINGLE_TEX
+  - _USE_YMG_TEX
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -37,6 +37,10 @@ Material:
         m_Texture: {fileID: 18700000, guid: 7348c5ba0aafd774ba621654b76db216, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _YmgTexArray:
+        m_Texture: {fileID: 18700000, guid: 1c1827d460f1b8242999e210dac333df, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - _Cutoff: 0.01
@@ -53,6 +57,7 @@ Material:
     - _UseTextTex: 0
     - _UseVColTex: 0
     - _UseWaveTex: 0
+    - _UseYmgTex: 0
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
