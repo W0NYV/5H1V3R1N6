@@ -22,7 +22,7 @@ namespace W0NYV.Shivering.GPUQuads
             "_USE_YMG_TEX"
         };
 
-        private uint[] args = new uint[5] { 0, 0, 0, 0, 0 };
+        private uint[] _args = new uint[5] { 0, 0, 0, 0, 0 };
 
         // private ComputeBuffer argsBuffer;
         private GraphicsBuffer _g_ArgsBuffer;
@@ -52,12 +52,12 @@ namespace W0NYV.Shivering.GPUQuads
 
             uint numIndices = (_instanceMesh != null) ? (uint)_instanceMesh.GetIndexCount(0) : 0;
 
-            args[0] = numIndices;
+            _args[0] = numIndices;
 
-            args[1] = (uint)_gpuQuads.MaxObjectNum;
+            _args[1] = (uint)_gpuQuads.MaxObjectNum;
 
             // argsBuffer.SetData(args);
-            _g_ArgsBuffer.SetData(args);
+            _g_ArgsBuffer.SetData(_args);
 
             _instanceRenderMaterial.SetBuffer("_QuadDataBuffer", _gpuQuads.QuadDataBuffer);
 
@@ -71,7 +71,7 @@ namespace W0NYV.Shivering.GPUQuads
         private void Start()
         {
             // argsBuffer = new ComputeBuffer(1, args.Length * sizeof(uint), ComputeBufferType.IndirectArguments);
-            _g_ArgsBuffer = new GraphicsBuffer(GraphicsBuffer.Target.IndirectArguments, 1, args.Length * sizeof(uint));
+            _g_ArgsBuffer = new GraphicsBuffer(GraphicsBuffer.Target.IndirectArguments, 1, _args.Length * sizeof(uint));
         }
 
         private void Update()
