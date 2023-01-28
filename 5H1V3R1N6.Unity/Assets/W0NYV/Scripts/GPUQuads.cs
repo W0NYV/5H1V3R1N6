@@ -36,7 +36,9 @@ namespace W0NYV.Shivering.GPUQuads
         [SerializeField] private int _modeNum = 0;
         [SerializeField] private int _preModeNum = 0;
         [SerializeField] private float _lerpValue = 1f;
+        
         [SerializeField] private float _lerpSpeed = 1f;
+        public float LerpSpeed { set => _lerpSpeed = value; }
         #endregion
 
         [SerializeField] private float _timeSpeed = 1f;

@@ -36,6 +36,11 @@ namespace W0NYV.Shivering.GPUQuads
             _gpuQuads.ActionValue = v;
         }
 
+        public void ChangeLerpSpeed(float v)
+        {
+            _gpuQuads.LerpSpeed = v * 2.95f + 0.05f;
+        }
+
         public void BuildUp(float v)
         {
             _gpuQuads.TimeSpeed = 1f + 19.0f*v;            
