@@ -106,7 +106,8 @@ Shader "PostEffect/PostEffect"
                 float4 tdither = tex2D(_BayerTex, tuv);
                 float4 lum = float4(0.299, 0.587, 0.114, 0);
                 float dither = dot(tdither, lum);
-                fixed3 dCol = step(dither, col.rgb) * fixed3(1.0, 0.0, 0.0);
+                fixed3 dCol = step(dither, col.rgb);
+                dCol = lerp(fixed3(0.075, 0.0, 0.2), fixed3(0.7, 1.0, 0.0), (dCol.r+dCol.g+dCol.b)/3.0);
 
                 col.rgb = lerp(col.rgb, dCol, step(0.7, _DThreshold));
                 

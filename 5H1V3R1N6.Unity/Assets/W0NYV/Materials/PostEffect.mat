@@ -9,8 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: PostEffect
   m_Shader: {fileID: 4800000, guid: 68a6f443309621340899edd725189f55, type: 3}
-  m_ValidKeywords:
-  - _X_REVERSE
+  m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -36,7 +35,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _BuildUp: 0
-    - _DThreshold: 0.44794518
+    - _DThreshold: 0
     - _XReverse: 0
     m_Colors: []
   m_BuildTextureStacks: []
