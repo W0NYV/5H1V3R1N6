@@ -9,6 +9,9 @@ namespace W0NYV.Shivering.PostEffect
     {
         [SerializeField] private Material _filter;
 
+        [SerializeField] private float _dThreshold = 0f;
+        public float DThreshold { set => _dThreshold = value; }
+
         private bool _isXReverse = false;
 
         private void OnRenderImage(RenderTexture src, RenderTexture dest)
@@ -18,6 +21,10 @@ namespace W0NYV.Shivering.PostEffect
 
         private void Start() {
             GetComponent<Camera>().depthTextureMode |= DepthTextureMode.Depth;
+        }
+
+        private void Update() {
+            _filter.SetFloat("_DThreshold", _dThreshold);
         }
 
         public void BuildUp(float v)

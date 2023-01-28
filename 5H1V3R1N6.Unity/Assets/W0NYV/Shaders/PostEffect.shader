@@ -3,6 +3,9 @@ Shader "PostEffect/PostEffect"
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
+        _BayerTex ("Bayer Tex", 2D) = "white" {}
+
+        _DThreshold ("DThreshold", Range(0.0, 1.0)) = 0.0
 
         [Toggle(_BUILD_UP)]_BuildUp("Build up", Float) = 0
         [Toggle(_X_REVERSE)]_XReverse("X Reverse", Float) = 0
@@ -22,6 +25,7 @@ Shader "PostEffect/PostEffect"
             #pragma multi_compile _ _X_REVERSE
 
             #include "UnityCG.cginc"
+            #include "./cginc/Utilities.cginc"
 
             struct appdata
             {
@@ -44,12 +48,8 @@ Shader "PostEffect/PostEffect"
             }
 
             sampler2D _MainTex;
-            sampler2D _CameraDepthTexture;
-
-            float rand(float2 st)
-            {
-                return frac(sin(dot(st.xy, float2(12.988, 78.233))) * 43758.5453123);
-            }
+            sampler2D _BayerTex;
+            float _DThreshold;
 
             //reference - https://www.shadertoy.com/view/4sXSWs
             fixed3 grain(float2 uv, float strength)
@@ -101,6 +101,15 @@ Shader "PostEffect/PostEffect"
                 //ラディカル色収差付ける？
                 //col = RadicalIroSyusa(uv);
 
+                float2 tuv = uv * _ScreenParams.xy / 8.0;
+                tuv = frac(tuv);
+                float4 tdither = tex2D(_BayerTex, tuv);
+                float4 lum = float4(0.299, 0.587, 0.114, 0);
+                float dither = dot(tdither, lum);
+                fixed3 dCol = step(dither, col.rgb) * fixed3(1.0, 0.0, 0.0);
+
+                col.rgb = lerp(col.rgb, dCol, step(0.7, _DThreshold));
+                
                 col.rgb *= 1.0 - grain(i.uv, 128.0);
 
                 return col;
