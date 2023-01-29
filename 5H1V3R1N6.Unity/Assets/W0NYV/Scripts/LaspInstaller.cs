@@ -20,11 +20,18 @@ namespace W0NYV.Shivering
         [SerializeField] private Dropdown _deviceList;
         private Lasp.SpectrumAnalyzer _spectrumAnalyzer;
 
+        private Lasp.AudioLevelTracker _audioLevelTracker;
+        [SerializeField] private CameraFilter _cameraFilter;
+
         [SerializeField] private RenderTexture _renderTex;
 
         [SerializeField] private Text _rangeGainText;
         private float _dynamicRange = 32;
         private float _gain = 20;
+
+        [SerializeField] private Text _dThresholdRangeGainText;
+        private float _dThresholdDynamicRange = 14;
+        private float _dThresholdGain = -1.3f;
 
         private void Start()
         {
@@ -63,6 +70,36 @@ namespace W0NYV.Shivering
             var spectrumAnalyzer = gameObject.AddComponent<Lasp.SpectrumToTexture>();
             spectrumAnalyzer.renderTexture = _renderTex;
             spectrumAnalyzer.overrideList = new Lasp.SpectrumToTexture.MaterialOverride[0];
+
+            _audioLevelTracker = gameObject.AddComponent<Lasp.AudioLevelTracker>();
+            _audioLevelTracker.deviceID = dev.ID;
+            _audioLevelTracker.autoGain = false;
+            _audioLevelTracker.gain = _dThresholdGain;
+            _audioLevelTracker.dynamicRange = _dThresholdDynamicRange;
+            _audioLevelTracker.propertyBinders =
+                new [] {
+                    new Lasp.FloatPropertyBinder {
+                        Target = _cameraFilter,
+                        PropertyName = "DThreshold",
+                        Value0 = 0f,
+                        Value1 = 1f
+                    }
+                };
+
+        }
+
+        public void ChangeDThresholdDynamicRange(float v)
+        {
+            _dThresholdDynamicRange = v * 39f + 1f;
+            _audioLevelTracker.dynamicRange = _dThresholdDynamicRange;
+            _dThresholdRangeGainText.text = "DThreshold:\n" + "Dynamic Range: " + _dThresholdDynamicRange.ToString("0.00") + "\n" + "Gain: " + _dThresholdGain.ToString("0.00");
+        }
+
+        public void ChangeDThresholdGain(float v)
+        {
+            _dThresholdGain = v * 50f - 10f;
+            _audioLevelTracker.gain = _dThresholdGain;
+            _dThresholdRangeGainText.text = "DThreshold:\n" + "Dynamic Range: " + _dThresholdDynamicRange.ToString("0.00") + "\n" + "Gain: " + _dThresholdGain.ToString("0.00");
         }
 
         public void ChangeDynamicRange(float v)

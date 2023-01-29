@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-namespace W0NYV.Shivering.PostEffect
+namespace W0NYV.Shivering
 {
     public class CameraFilter : MonoBehaviour
     {
