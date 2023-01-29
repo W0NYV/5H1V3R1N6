@@ -36,7 +36,7 @@ Material:
     m_Floats:
     - _BuildUp: 0
     - _ColMatIndex: 1
-    - _DThreshold: 0.98715055
+    - _DThreshold: 0
     - _XReverse: 0
     m_Colors: []
   m_BuildTextureStacks: []
