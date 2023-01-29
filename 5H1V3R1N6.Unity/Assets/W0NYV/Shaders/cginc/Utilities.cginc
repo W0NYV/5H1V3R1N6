@@ -20,6 +20,11 @@ float rand3(float3 co)
     return frac(sin(dot(co.xyz, float3(12.9898, 78.233, 56.787))) * 43758.5453);
 }
 
+float2 hash(float n)
+{
+    return frac(sin(float2(n, n+1.0))*float2(43758.5453123, 22578.1459123));
+}
+
 //色
 fixed4 hsv2rgb(float h, float s, float v)
 {

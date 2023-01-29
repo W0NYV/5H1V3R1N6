@@ -84,8 +84,15 @@ Shader "PostEffect/PostEffect"
 
             fixed4 frag (v2f i) : SV_Target
             {
-
+                
                 float2 uv = i.uv;
+
+                //シェイク
+                if(0.1 < step(0.7, _DThreshold))
+                {
+                    float t = normalize(hash(_Time.y)) * (1.75/200.0);
+                    uv += t;
+                }
 
                 #if _X_REVERSE
                     uv.x = abs(uv.x - 0.5);
@@ -101,7 +108,10 @@ Shader "PostEffect/PostEffect"
                 //ラディカル色収差付ける？
                 //col = RadicalIroSyusa(uv);
 
-                float2 tuv = uv * _ScreenParams.xy / 8.0;
+                col.rgb *= 1.0 - grain(i.uv, 128.0);
+
+                //ディザ
+                float2 tuv = +uv * _ScreenParams.xy / 8.0;
                 tuv = frac(tuv);
                 float4 tdither = tex2D(_BayerTex, tuv);
                 float4 lum = float4(0.299, 0.587, 0.114, 0);
@@ -111,8 +121,6 @@ Shader "PostEffect/PostEffect"
 
                 col.rgb = lerp(col.rgb, dCol, step(0.7, _DThreshold));
                 
-                col.rgb *= 1.0 - grain(i.uv, 128.0);
-
                 return col;
             }
             ENDCG
