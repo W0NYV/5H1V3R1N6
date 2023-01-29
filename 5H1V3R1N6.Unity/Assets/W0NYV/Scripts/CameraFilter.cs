@@ -27,6 +27,10 @@ namespace W0NYV.Shivering
             _filter.SetFloat("_DThreshold", _dThreshold);
         }
 
+        public void ChangeColMatIndexTo0(float v) {if(v==1.0) _filter.SetInt("_ColMatIndex", 0);}
+        public void ChangeColMatIndexTo1(float v) {if(v==1.0) _filter.SetInt("_ColMatIndex", 1);}
+        public void ChangeColMatIndexTo2(float v) {if(v==1.0) _filter.SetInt("_ColMatIndex", 2);}
+
         public void BuildUp(float v)
         {
             if(v == 1.0)

@@ -6,6 +6,7 @@ Shader "PostEffect/PostEffect"
         _BayerTex ("Bayer Tex", 2D) = "white" {}
 
         _DThreshold ("DThreshold", Range(0.0, 1.0)) = 0.0
+        _ColMatIndex ("ColMatIndex", int) = 0
 
         [Toggle(_BUILD_UP)]_BuildUp("Build up", Float) = 0
         [Toggle(_X_REVERSE)]_XReverse("X Reverse", Float) = 0
@@ -50,6 +51,7 @@ Shader "PostEffect/PostEffect"
             sampler2D _MainTex;
             sampler2D _BayerTex;
             float _DThreshold;
+            int _ColMatIndex;
 
             //reference - https://www.shadertoy.com/view/4sXSWs
             fixed3 grain(float2 uv, float strength)
@@ -111,15 +113,26 @@ Shader "PostEffect/PostEffect"
                 col.rgb *= 1.0 - grain(i.uv, 128.0);
 
                 //ディザ
-                float2 tuv = +uv * _ScreenParams.xy / 8.0;
-                tuv = frac(tuv);
-                float4 tdither = tex2D(_BayerTex, tuv);
-                float4 lum = float4(0.299, 0.587, 0.114, 0);
-                float dither = dot(tdither, lum);
-                fixed3 dCol = step(dither, col.rgb);
-                dCol = lerp(fixed3(0.075, 0.0, 0.2), fixed3(0.7, 1.0, 0.0), (dCol.r+dCol.g+dCol.b)/3.0);
+                if(0.1 < step(0.7, _DThreshold))
+                {
 
-                col.rgb = lerp(col.rgb, dCol, step(0.7, _DThreshold));
+                    float3x3 colMat1 = float3x3(fixed3(0.7, 1.0, 0.0), 
+                                                fixed3(0.0, 0.7, 1.0), 
+                                                fixed3(1.0, 0.0, 0.0));
+
+                    float3x3 colMat2 = float3x3(fixed3(0.075, 0.0, 0.2), 
+                                                fixed3(0.0, 0.15, 0.05), 
+                                                fixed3(0.1, 0.0, 0.0));
+
+                    float2 tuv = +uv * _ScreenParams.xy / 8.0;
+                    tuv = frac(tuv);
+                    float4 tdither = tex2D(_BayerTex, tuv);
+                    float4 lum = float4(0.299, 0.587, 0.114, 0);
+                    float dither = dot(tdither, lum);
+                    fixed3 dCol = step(dither, col.rgb);
+                    dCol = lerp(colMat2[_ColMatIndex], colMat1[_ColMatIndex], (dCol.r+dCol.g+dCol.b)/3.0);
+                    col.rgb = dCol;
+                }
                 
                 return col;
             }
