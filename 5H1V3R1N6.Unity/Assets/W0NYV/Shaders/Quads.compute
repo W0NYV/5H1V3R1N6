@@ -9,6 +9,7 @@
 #include "./cginc/TiledBox.cginc"
 #include "./cginc/Tunnel.cginc"
 #include "./cginc/Lissajous.cginc"
+#include "./cginc/DrawMatrix.cginc"
 #include "./cginc/Utilities.cginc"
 
 struct QuadData
@@ -16,6 +17,7 @@ struct QuadData
     float3 position;
     float3 rotation;
     float3 scale;
+    float2 drawPos;
 };
 
 RWStructuredBuffer<QuadData> _QuadDataBufferWrite;
@@ -50,8 +52,9 @@ void TransformCS(uint3 DTid : SV_DispatchThreadID, uint3 Gid : SV_GroupID, uint3
     float3x3 tunnelMatrix = tunnelMat(DT_ID, 64, _Time);
     float3x3 lissajousMatrix = lissajousMat(DT_ID, _QuadCount, 1.0, 1.0, 0.0, _Time);
     float3x3 lissajousMatrix2 = lissajousMat(DT_ID, _QuadCount, 3.0, 4.0, rand((float)DT_ID/(float)_QuadCount)*5.0-2.5, _Time);
+    float3x3 drawMatrix = drawMat(_QuadDataBufferWrite[DT_ID].drawPos, DT_ID, _QuadCount, _Time);
 
-    float3x3 matArr[8];
+    float3x3 matArr[9];
     matArr[0] = oneBoxMatrix;
     matArr[1] = tiledBoxMatrix;
     matArr[2] = lineMatrix;
@@ -60,6 +63,7 @@ void TransformCS(uint3 DTid : SV_DispatchThreadID, uint3 Gid : SV_GroupID, uint3
     matArr[5] = tunnelMatrix;
     matArr[6] = lissajousMatrix;
     matArr[7] = lissajousMatrix2;
+    matArr[8] = drawMatrix;
 
     if(_PreModeNum == _ModeNum)
     {

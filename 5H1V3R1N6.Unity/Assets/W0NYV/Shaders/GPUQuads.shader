@@ -74,6 +74,7 @@ Shader "GPUQuads/GPUQuads"
             float3 position;
             float3 rotation;
             float3 scale;
+            float2 drawPos;
         };
 
         #ifdef UNITY_PROCEDURAL_INSTANCING_ENABLED
@@ -151,7 +152,7 @@ Shader "GPUQuads/GPUQuads"
                 float2 uv2 = uv;
                 uv2.x = uv2.x/16.0 + (1.0/16.0*IN.index16);
                 uv2.y = uv2.y/8.0 + (1.0/8.0*IN.index8);
-                uv2 = frac(uv2*1.0+_Time.y/20.0);
+                uv2.x = frac(uv2.x*1.0+_Time.y/20.0);
                 c = tex2D(_SingleModeTex, uv2);
             #elif _USE_EYE_TEX
                 c = eye(uv, _Time.y, IN.index4);

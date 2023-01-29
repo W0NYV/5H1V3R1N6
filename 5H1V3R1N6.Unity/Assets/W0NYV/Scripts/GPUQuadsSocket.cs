@@ -29,6 +29,7 @@ namespace W0NYV.Shivering.GPUQuads
         public void ChangeTunnelMode(float v){if(v == 1.0) _gpuQuads.ChangeMode(5);}
         public void ChangeLissajousMode(float v){if(v == 1.0) _gpuQuads.ChangeMode(6);}
         public void ChangeLissajous2Mode(float v){if(v == 1.0) _gpuQuads.ChangeMode(7);}
+        public void ChangeDrawMode(float v){if(v == 1.0) _gpuQuads.ChangeMode(8);}
 
         #endregion
 

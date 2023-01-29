@@ -53,7 +53,7 @@ Shader "CustomSkybox/Skybox"
                 uv = frac(uv * 2.0) - 0.5;
 
                 // float s = step(rand(floor(uv*100.0)), 0.00001);
-                float s = step(1.0, 0.003 / length(uv. y)) - 0.9;
+                float s = step(1.0, 0.0045 / length(uv. y)) - 0.9;
 
                 return fixed4(s, s, s, 1.0);
             }

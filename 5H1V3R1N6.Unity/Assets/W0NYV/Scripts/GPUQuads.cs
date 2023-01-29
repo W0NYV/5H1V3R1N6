@@ -14,6 +14,7 @@ namespace W0NYV.Shivering.GPUQuads
             public Vector3 position;
             public Vector3 rotation;
             public Vector3 scale;
+            public Vector2 drawPos;
         }
 
         private int _threadSize = 4;
@@ -113,6 +114,9 @@ namespace W0NYV.Shivering.GPUQuads
 
         private void InitBuffer()
         {
+
+            DrawArray da = new DrawArray();
+
             _quadDataBuffer = new ComputeBuffer(_maxObjectNum, Marshal.SizeOf(typeof(QuadData)));
 
             var quadDataArr = new QuadData[_maxObjectNum];
@@ -121,11 +125,13 @@ namespace W0NYV.Shivering.GPUQuads
                 quadDataArr[i].position = Vector3.zero;
                 quadDataArr[i].rotation = Vector3.zero;
                 quadDataArr[i].scale = new Vector3(1f, 1f, 1f);
+                quadDataArr[i].drawPos = da.drawArray[i];
             }
 
             _quadDataBuffer.SetData(quadDataArr);
 
             quadDataArr = null;
+            da = null;
         }
 
         private void ReleaseBuffer()
