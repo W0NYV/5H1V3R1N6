@@ -56,7 +56,6 @@ namespace W0NYV.Shivering.GPUQuads
 
             _args[1] = (uint)_gpuQuads.MaxObjectNum;
 
-            // argsBuffer.SetData(args);
             _g_ArgsBuffer.SetData(_args);
 
             _instanceRenderMaterial.SetBuffer("_QuadDataBuffer", _gpuQuads.QuadDataBuffer);
@@ -70,7 +69,6 @@ namespace W0NYV.Shivering.GPUQuads
 
         private void Start()
         {
-            // argsBuffer = new ComputeBuffer(1, args.Length * sizeof(uint), ComputeBufferType.IndirectArguments);
             _g_ArgsBuffer = new GraphicsBuffer(GraphicsBuffer.Target.IndirectArguments, 1, _args.Length * sizeof(uint));
         }
 

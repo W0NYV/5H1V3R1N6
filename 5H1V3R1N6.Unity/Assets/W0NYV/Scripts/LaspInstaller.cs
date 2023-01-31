@@ -106,14 +106,14 @@ namespace W0NYV.Shivering
         {
             _dynamicRange = v * 119 + 1; 
             _spectrumAnalyzer.dynamicRange = _dynamicRange;
-            _rangeGainText.text = "DynamicRange: " + _dynamicRange.ToString("0.00") + "\n" + "Gain: " + _gain.ToString("0.00");
+            _rangeGainText.text = "SpectrumAnalyze:\n" + "DynamicRange: " + _dynamicRange.ToString("0.00") + "\n" + "Gain: " + _gain.ToString("0.00");
         }
 
         public void ChangeGain(float v)
         {
             _gain = v * 130 - 10;
             _spectrumAnalyzer.gain = _gain;
-            _rangeGainText.text = "DynamicRange: " + _dynamicRange.ToString("0.00") + "\n" + "Gain: " + _gain.ToString("0.00");
+            _rangeGainText.text = "SpectrumAnalyze:\n" + "DynamicRange: " + _dynamicRange.ToString("0.00") + "\n" + "Gain: " + _gain.ToString("0.00");
         }
     }
 }
