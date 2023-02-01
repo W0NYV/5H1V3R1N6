@@ -1,6 +1,8 @@
 # This is VJ Tool for [draw(); #2](https://sites.google.com/view/function-draw/home)
 
-![ezgif com-gif-maker (5)](https://user-images.githubusercontent.com/15060080/211011350-5f487d0b-370d-43d2-b82a-a22f5a80a93d.gif)
+![ezgif com-gif-maker (6)](https://user-images.githubusercontent.com/15060080/215949482-bf5b0ac4-c624-43e4-bf3c-4b04627325c8.gif)
+![ezgif com-gif-maker (5)](https://user-images.githubusercontent.com/15060080/215949486-1372f723-b66f-4d62-9c88-599e2edd7e36.gif)
+![ezgif com-gif-maker (4)](https://user-images.githubusercontent.com/15060080/215949487-62fcf228-604a-4a18-9a46-73afd52a3a79.gif)
 
 Credit
 -------
