@@ -8,8 +8,37 @@
   <img src="https://user-images.githubusercontent.com/15060080/215949487-62fcf228-604a-4a18-9a46-73afd52a3a79.gif" width="300">
   <img src="https://user-images.githubusercontent.com/15060080/215951544-459f7035-8c81-4f36-96f0-a0e8d530aeb5.gif" width="300">
 </p>
-  
-Credit
+
+📎Dependency
+-------
+
+<table>
+  <thead>
+    <tr>
+      <th>name</th> <th>version</th>
+    </tr>
+  </thead>
+  <tr>
+    <td> Unity </td> <td>2021.3.10f1</td>
+  </tr>
+  <tr>
+    <td> Input System </td> <td>1.4.1</td>
+  </tr>
+  <tr>
+    <td> Minis </td> <td>1.0.10</td>
+  </tr>
+  <tr>
+    <td> UniRx </td> <td>7.1.0</td>
+  </tr>
+  <tr>
+    <td> LASP </td> <td>2.1.6</td>
+  </tr>
+  <tr>
+    <td> Klak Spout </td> <td>2.0.3</td>
+  </tr>
+</table>
+
+💳Credit
 -------
 
 ### LPS Head
