@@ -22,7 +22,7 @@
     <td> Unity </td> <td>2021.3.10f1</td>
   </tr>
   <tr>
-    <td> Input System </td> <td>1.4.1</td>
+    <td> Input System </td> <td>1.4.4</td>
   </tr>
   <tr>
     <td> Minis </td> <td>1.0.10</td>
