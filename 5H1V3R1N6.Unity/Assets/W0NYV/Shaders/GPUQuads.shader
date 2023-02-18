@@ -119,7 +119,7 @@ Shader "GPUQuads/GPUQuads"
 
             v.vertex = mul(object2world, v.vertex);
 
-            v.normal = normalize(mul(object2world, v.vertex));
+            v.normal = normalize(mul(object2world, v.));
 
             o.index = index;
             o.index4 = floor(fmod(index, 4.0));
